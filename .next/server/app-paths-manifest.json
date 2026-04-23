@@ -1,7 +1,14 @@
 {
-  "/(main)/page": "app/(main)/page.js",
-  "/(main)/c/[slug]/page": "app/(main)/c/[slug]/page.js",
-  "/(main)/c/[slug]/new/page": "app/(main)/c/[slug]/new/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/(auth)/login/page": "app/(auth)/login/page.js",
+  "/api/auth/chzzk/callback/route": "app/api/auth/chzzk/callback/route.js",
+  "/api/auth/chzzk/logout/route": "app/api/auth/chzzk/logout/route.js",
+  "/api/auth/chzzk/login/route": "app/api/auth/chzzk/login/route.js",
   "/(main)/c/[slug]/[postId]/page": "app/(main)/c/[slug]/[postId]/page.js",
-  "/(main)/profile/page": "app/(main)/profile/page.js"
+  "/(main)/page": "app/(main)/page.js",
+  "/(main)/story/[id]/page": "app/(main)/story/[id]/page.js",
+  "/(main)/profile/page": "app/(main)/profile/page.js",
+  "/(main)/u/[username]/page": "app/(main)/u/[username]/page.js",
+  "/(main)/c/[slug]/page": "app/(main)/c/[slug]/page.js",
+  "/(main)/c/[slug]/new/page": "app/(main)/c/[slug]/new/page.js"
 }

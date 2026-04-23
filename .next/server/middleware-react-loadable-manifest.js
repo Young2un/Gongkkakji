@@ -1,1 +1,1 @@
-self.__REACT_LOADABLE_MANIFEST="{}"
+self.__REACT_LOADABLE_MANIFEST='{"components/story/story-viewer.tsx -> react-insta-stories":{"id":8356,"files":["static/chunks/356.f426c798d4ef9cfa.js"]}}';

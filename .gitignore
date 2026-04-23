@@ -1,1 +1,22 @@
 node_modules
+
+# Next.js
+.next
+out
+
+# Env
+.env
+.env.local
+.env*.local
+
+# next-pwa 자동 생성 파일 (빌드 시 재생성됨)
+public/sw.js
+public/sw.js.map
+public/workbox-*.js
+public/workbox-*.js.map
+public/fallback-*.js
+public/worker-*.js
+public/worker-*.js.map
+
+# misc
+.DS_Store
