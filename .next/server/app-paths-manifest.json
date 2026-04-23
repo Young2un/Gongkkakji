@@ -1,0 +1,6 @@
+{
+  "/(main)/page": "app/(main)/page.js",
+  "/(main)/c/[slug]/page": "app/(main)/c/[slug]/page.js",
+  "/(main)/c/[slug]/[postId]/page": "app/(main)/c/[slug]/[postId]/page.js",
+  "/(main)/c/[slug]/new/page": "app/(main)/c/[slug]/new/page.js"
+}
