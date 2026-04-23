@@ -45,13 +45,15 @@
         "app/(main)/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fgoldenplanet%2FDocuments%2Fgongeun%2FGongkkakji%2Fapp%2Factions%2Fstory.ts%22%2C%5B%22deleteStory%22%2C%22saveStoryAsHighlight%22%2C%22markStoryViewed%22%2C%22createStory%22%5D%5D%5D&__client_imported__=true!",
         "app/(main)/c/[slug]/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fgoldenplanet%2FDocuments%2Fgongeun%2FGongkkakji%2Fapp%2Factions%2Fstory.ts%22%2C%5B%22deleteStory%22%2C%22saveStoryAsHighlight%22%2C%22markStoryViewed%22%2C%22createStory%22%5D%5D%5D&__client_imported__=true!",
         "app/(main)/c/[slug]/new/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fgoldenplanet%2FDocuments%2Fgongeun%2FGongkkakji%2Fapp%2Factions%2Fboard.ts%22%2C%5B%22createComment%22%2C%22createPost%22%2C%22incrementView%22%2C%22toggleLike%22%5D%5D%2C%5B%22%2FUsers%2Fgoldenplanet%2FDocuments%2Fgongeun%2FGongkkakji%2Fapp%2Factions%2Fstory.ts%22%2C%5B%22deleteStory%22%2C%22saveStoryAsHighlight%22%2C%22markStoryViewed%22%2C%22createStory%22%5D%5D%5D&__client_imported__=true!",
-        "app/(main)/c/[slug]/[postId]/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fgoldenplanet%2FDocuments%2Fgongeun%2FGongkkakji%2Fapp%2Factions%2Fboard.ts%22%2C%5B%22createComment%22%2C%22createPost%22%2C%22incrementView%22%2C%22toggleLike%22%5D%5D%2C%5B%22%2FUsers%2Fgoldenplanet%2FDocuments%2Fgongeun%2FGongkkakji%2Fapp%2Factions%2Fstory.ts%22%2C%5B%22deleteStory%22%2C%22saveStoryAsHighlight%22%2C%22markStoryViewed%22%2C%22createStory%22%5D%5D%5D&__client_imported__=true!"
+        "app/(main)/c/[slug]/[postId]/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fgoldenplanet%2FDocuments%2Fgongeun%2FGongkkakji%2Fapp%2Factions%2Fboard.ts%22%2C%5B%22createComment%22%2C%22createPost%22%2C%22incrementView%22%2C%22toggleLike%22%5D%5D%2C%5B%22%2FUsers%2Fgoldenplanet%2FDocuments%2Fgongeun%2FGongkkakji%2Fapp%2Factions%2Fstory.ts%22%2C%5B%22deleteStory%22%2C%22saveStoryAsHighlight%22%2C%22markStoryViewed%22%2C%22createStory%22%5D%5D%5D&__client_imported__=true!",
+        "app/(main)/profile/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fgoldenplanet%2FDocuments%2Fgongeun%2FGongkkakji%2Fapp%2Factions%2Fprofile.ts%22%2C%5B%22updateProfile%22%5D%5D%2C%5B%22%2FUsers%2Fgoldenplanet%2FDocuments%2Fgongeun%2FGongkkakji%2Fapp%2Factions%2Fstory.ts%22%2C%5B%22deleteStory%22%2C%22saveStoryAsHighlight%22%2C%22markStoryViewed%22%2C%22createStory%22%5D%5D%5D&__client_imported__=true!"
       },
       "layer": {
         "app/(main)/page": "action-browser",
         "app/(main)/c/[slug]/page": "action-browser",
         "app/(main)/c/[slug]/new/page": "action-browser",
-        "app/(main)/c/[slug]/[postId]/page": "action-browser"
+        "app/(main)/c/[slug]/[postId]/page": "action-browser",
+        "app/(main)/profile/page": "action-browser"
       }
     },
     "15a3c21d77db1d7ba84f5f3d46b17fa8cbab77a1": {
@@ -59,13 +61,15 @@
         "app/(main)/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fgoldenplanet%2FDocuments%2Fgongeun%2FGongkkakji%2Fapp%2Factions%2Fstory.ts%22%2C%5B%22deleteStory%22%2C%22saveStoryAsHighlight%22%2C%22markStoryViewed%22%2C%22createStory%22%5D%5D%5D&__client_imported__=true!",
         "app/(main)/c/[slug]/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fgoldenplanet%2FDocuments%2Fgongeun%2FGongkkakji%2Fapp%2Factions%2Fstory.ts%22%2C%5B%22deleteStory%22%2C%22saveStoryAsHighlight%22%2C%22markStoryViewed%22%2C%22createStory%22%5D%5D%5D&__client_imported__=true!",
         "app/(main)/c/[slug]/new/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fgoldenplanet%2FDocuments%2Fgongeun%2FGongkkakji%2Fapp%2Factions%2Fboard.ts%22%2C%5B%22createComment%22%2C%22createPost%22%2C%22incrementView%22%2C%22toggleLike%22%5D%5D%2C%5B%22%2FUsers%2Fgoldenplanet%2FDocuments%2Fgongeun%2FGongkkakji%2Fapp%2Factions%2Fstory.ts%22%2C%5B%22deleteStory%22%2C%22saveStoryAsHighlight%22%2C%22markStoryViewed%22%2C%22createStory%22%5D%5D%5D&__client_imported__=true!",
-        "app/(main)/c/[slug]/[postId]/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fgoldenplanet%2FDocuments%2Fgongeun%2FGongkkakji%2Fapp%2Factions%2Fboard.ts%22%2C%5B%22createComment%22%2C%22createPost%22%2C%22incrementView%22%2C%22toggleLike%22%5D%5D%2C%5B%22%2FUsers%2Fgoldenplanet%2FDocuments%2Fgongeun%2FGongkkakji%2Fapp%2Factions%2Fstory.ts%22%2C%5B%22deleteStory%22%2C%22saveStoryAsHighlight%22%2C%22markStoryViewed%22%2C%22createStory%22%5D%5D%5D&__client_imported__=true!"
+        "app/(main)/c/[slug]/[postId]/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fgoldenplanet%2FDocuments%2Fgongeun%2FGongkkakji%2Fapp%2Factions%2Fboard.ts%22%2C%5B%22createComment%22%2C%22createPost%22%2C%22incrementView%22%2C%22toggleLike%22%5D%5D%2C%5B%22%2FUsers%2Fgoldenplanet%2FDocuments%2Fgongeun%2FGongkkakji%2Fapp%2Factions%2Fstory.ts%22%2C%5B%22deleteStory%22%2C%22saveStoryAsHighlight%22%2C%22markStoryViewed%22%2C%22createStory%22%5D%5D%5D&__client_imported__=true!",
+        "app/(main)/profile/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fgoldenplanet%2FDocuments%2Fgongeun%2FGongkkakji%2Fapp%2Factions%2Fprofile.ts%22%2C%5B%22updateProfile%22%5D%5D%2C%5B%22%2FUsers%2Fgoldenplanet%2FDocuments%2Fgongeun%2FGongkkakji%2Fapp%2Factions%2Fstory.ts%22%2C%5B%22deleteStory%22%2C%22saveStoryAsHighlight%22%2C%22markStoryViewed%22%2C%22createStory%22%5D%5D%5D&__client_imported__=true!"
       },
       "layer": {
         "app/(main)/page": "action-browser",
         "app/(main)/c/[slug]/page": "action-browser",
         "app/(main)/c/[slug]/new/page": "action-browser",
-        "app/(main)/c/[slug]/[postId]/page": "action-browser"
+        "app/(main)/c/[slug]/[postId]/page": "action-browser",
+        "app/(main)/profile/page": "action-browser"
       }
     },
     "4692049bc21c37988c615ac137197c19375d303f": {
@@ -73,13 +77,15 @@
         "app/(main)/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fgoldenplanet%2FDocuments%2Fgongeun%2FGongkkakji%2Fapp%2Factions%2Fstory.ts%22%2C%5B%22deleteStory%22%2C%22saveStoryAsHighlight%22%2C%22markStoryViewed%22%2C%22createStory%22%5D%5D%5D&__client_imported__=true!",
         "app/(main)/c/[slug]/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fgoldenplanet%2FDocuments%2Fgongeun%2FGongkkakji%2Fapp%2Factions%2Fstory.ts%22%2C%5B%22deleteStory%22%2C%22saveStoryAsHighlight%22%2C%22markStoryViewed%22%2C%22createStory%22%5D%5D%5D&__client_imported__=true!",
         "app/(main)/c/[slug]/new/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fgoldenplanet%2FDocuments%2Fgongeun%2FGongkkakji%2Fapp%2Factions%2Fboard.ts%22%2C%5B%22createComment%22%2C%22createPost%22%2C%22incrementView%22%2C%22toggleLike%22%5D%5D%2C%5B%22%2FUsers%2Fgoldenplanet%2FDocuments%2Fgongeun%2FGongkkakji%2Fapp%2Factions%2Fstory.ts%22%2C%5B%22deleteStory%22%2C%22saveStoryAsHighlight%22%2C%22markStoryViewed%22%2C%22createStory%22%5D%5D%5D&__client_imported__=true!",
-        "app/(main)/c/[slug]/[postId]/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fgoldenplanet%2FDocuments%2Fgongeun%2FGongkkakji%2Fapp%2Factions%2Fboard.ts%22%2C%5B%22createComment%22%2C%22createPost%22%2C%22incrementView%22%2C%22toggleLike%22%5D%5D%2C%5B%22%2FUsers%2Fgoldenplanet%2FDocuments%2Fgongeun%2FGongkkakji%2Fapp%2Factions%2Fstory.ts%22%2C%5B%22deleteStory%22%2C%22saveStoryAsHighlight%22%2C%22markStoryViewed%22%2C%22createStory%22%5D%5D%5D&__client_imported__=true!"
+        "app/(main)/c/[slug]/[postId]/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fgoldenplanet%2FDocuments%2Fgongeun%2FGongkkakji%2Fapp%2Factions%2Fboard.ts%22%2C%5B%22createComment%22%2C%22createPost%22%2C%22incrementView%22%2C%22toggleLike%22%5D%5D%2C%5B%22%2FUsers%2Fgoldenplanet%2FDocuments%2Fgongeun%2FGongkkakji%2Fapp%2Factions%2Fstory.ts%22%2C%5B%22deleteStory%22%2C%22saveStoryAsHighlight%22%2C%22markStoryViewed%22%2C%22createStory%22%5D%5D%5D&__client_imported__=true!",
+        "app/(main)/profile/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fgoldenplanet%2FDocuments%2Fgongeun%2FGongkkakji%2Fapp%2Factions%2Fprofile.ts%22%2C%5B%22updateProfile%22%5D%5D%2C%5B%22%2FUsers%2Fgoldenplanet%2FDocuments%2Fgongeun%2FGongkkakji%2Fapp%2Factions%2Fstory.ts%22%2C%5B%22deleteStory%22%2C%22saveStoryAsHighlight%22%2C%22markStoryViewed%22%2C%22createStory%22%5D%5D%5D&__client_imported__=true!"
       },
       "layer": {
         "app/(main)/page": "action-browser",
         "app/(main)/c/[slug]/page": "action-browser",
         "app/(main)/c/[slug]/new/page": "action-browser",
-        "app/(main)/c/[slug]/[postId]/page": "action-browser"
+        "app/(main)/c/[slug]/[postId]/page": "action-browser",
+        "app/(main)/profile/page": "action-browser"
       }
     },
     "f27c1459168dd0610acd60aba8450a20020219c4": {
@@ -87,13 +93,23 @@
         "app/(main)/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fgoldenplanet%2FDocuments%2Fgongeun%2FGongkkakji%2Fapp%2Factions%2Fstory.ts%22%2C%5B%22deleteStory%22%2C%22saveStoryAsHighlight%22%2C%22markStoryViewed%22%2C%22createStory%22%5D%5D%5D&__client_imported__=true!",
         "app/(main)/c/[slug]/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fgoldenplanet%2FDocuments%2Fgongeun%2FGongkkakji%2Fapp%2Factions%2Fstory.ts%22%2C%5B%22deleteStory%22%2C%22saveStoryAsHighlight%22%2C%22markStoryViewed%22%2C%22createStory%22%5D%5D%5D&__client_imported__=true!",
         "app/(main)/c/[slug]/new/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fgoldenplanet%2FDocuments%2Fgongeun%2FGongkkakji%2Fapp%2Factions%2Fboard.ts%22%2C%5B%22createComment%22%2C%22createPost%22%2C%22incrementView%22%2C%22toggleLike%22%5D%5D%2C%5B%22%2FUsers%2Fgoldenplanet%2FDocuments%2Fgongeun%2FGongkkakji%2Fapp%2Factions%2Fstory.ts%22%2C%5B%22deleteStory%22%2C%22saveStoryAsHighlight%22%2C%22markStoryViewed%22%2C%22createStory%22%5D%5D%5D&__client_imported__=true!",
-        "app/(main)/c/[slug]/[postId]/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fgoldenplanet%2FDocuments%2Fgongeun%2FGongkkakji%2Fapp%2Factions%2Fboard.ts%22%2C%5B%22createComment%22%2C%22createPost%22%2C%22incrementView%22%2C%22toggleLike%22%5D%5D%2C%5B%22%2FUsers%2Fgoldenplanet%2FDocuments%2Fgongeun%2FGongkkakji%2Fapp%2Factions%2Fstory.ts%22%2C%5B%22deleteStory%22%2C%22saveStoryAsHighlight%22%2C%22markStoryViewed%22%2C%22createStory%22%5D%5D%5D&__client_imported__=true!"
+        "app/(main)/c/[slug]/[postId]/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fgoldenplanet%2FDocuments%2Fgongeun%2FGongkkakji%2Fapp%2Factions%2Fboard.ts%22%2C%5B%22createComment%22%2C%22createPost%22%2C%22incrementView%22%2C%22toggleLike%22%5D%5D%2C%5B%22%2FUsers%2Fgoldenplanet%2FDocuments%2Fgongeun%2FGongkkakji%2Fapp%2Factions%2Fstory.ts%22%2C%5B%22deleteStory%22%2C%22saveStoryAsHighlight%22%2C%22markStoryViewed%22%2C%22createStory%22%5D%5D%5D&__client_imported__=true!",
+        "app/(main)/profile/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fgoldenplanet%2FDocuments%2Fgongeun%2FGongkkakji%2Fapp%2Factions%2Fprofile.ts%22%2C%5B%22updateProfile%22%5D%5D%2C%5B%22%2FUsers%2Fgoldenplanet%2FDocuments%2Fgongeun%2FGongkkakji%2Fapp%2Factions%2Fstory.ts%22%2C%5B%22deleteStory%22%2C%22saveStoryAsHighlight%22%2C%22markStoryViewed%22%2C%22createStory%22%5D%5D%5D&__client_imported__=true!"
       },
       "layer": {
         "app/(main)/page": "action-browser",
         "app/(main)/c/[slug]/page": "action-browser",
         "app/(main)/c/[slug]/new/page": "action-browser",
-        "app/(main)/c/[slug]/[postId]/page": "action-browser"
+        "app/(main)/c/[slug]/[postId]/page": "action-browser",
+        "app/(main)/profile/page": "action-browser"
+      }
+    },
+    "61d709a87fac1b2eb5e2d201b742a4d725d4f19c": {
+      "workers": {
+        "app/(main)/profile/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fgoldenplanet%2FDocuments%2Fgongeun%2FGongkkakji%2Fapp%2Factions%2Fprofile.ts%22%2C%5B%22updateProfile%22%5D%5D%2C%5B%22%2FUsers%2Fgoldenplanet%2FDocuments%2Fgongeun%2FGongkkakji%2Fapp%2Factions%2Fstory.ts%22%2C%5B%22deleteStory%22%2C%22saveStoryAsHighlight%22%2C%22markStoryViewed%22%2C%22createStory%22%5D%5D%5D&__client_imported__=true!"
+      },
+      "layer": {
+        "app/(main)/profile/page": "action-browser"
       }
     }
   },

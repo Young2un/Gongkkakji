@@ -21,12 +21,14 @@ export interface ChzzkUser {
   profileImageUrl: string | null;
 }
 
-// 채널 정보
+// 채널 정보 (Open API /open/v1/channels 응답)
 export interface ChzzkChannel {
   channelId: string;
   channelName: string;
   channelImageUrl: string | null;
+  channelDescription?: string | null;
   verifiedMark: boolean;
+  followerCount?: number;
 }
 
 // 라이브 방송 정보

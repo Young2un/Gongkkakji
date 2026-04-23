@@ -1,7 +1,17 @@
-import { type NextRequest } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 import { updateSession } from '@/lib/supabase/middleware';
 
 export async function middleware(request: NextRequest) {
+  const { pathname, search } = request.nextUrl;
+
+  // /@username → /u/username 내부 rewrite (URL 바에는 @ 유지)
+  if (pathname.startsWith('/@') && pathname.length > 2) {
+    const url = request.nextUrl.clone();
+    url.pathname = `/u/${pathname.slice(2)}`;
+    url.search = search;
+    return NextResponse.rewrite(url);
+  }
+
   return await updateSession(request);
 }
 
