@@ -3,6 +3,9 @@ import { redirect } from 'next/navigation';
 import { ExternalLink } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
 import { ProfileForm } from '@/components/profile/profile-form';
+import { PointsPanel } from '@/components/profile/points-panel';
+
+const POINT_LOG_LIMIT = 20;
 
 export default async function MyProfilePage() {
   const supabase = createClient();
@@ -12,13 +15,40 @@ export default async function MyProfilePage() {
   } = await supabase.auth.getUser();
   if (!user) redirect('/login?redirect=/profile');
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('username, display_name, bio, avatar_url, role, chzzk_channel_id')
-    .eq('id', user.id)
-    .maybeSingle();
+  // KST 기준 오늘
+  const todayKst = new Date(
+    new Date().toLocaleString('en-US', { timeZone: 'Asia/Seoul' })
+  )
+    .toISOString()
+    .slice(0, 10);
 
+  const [profileRes, pointsRes, logsRes, attRes] = await Promise.all([
+    supabase
+      .from('profiles')
+      .select('username, display_name, bio, avatar_url, role, chzzk_channel_id')
+      .eq('id', user.id)
+      .maybeSingle(),
+    supabase.from('user_points').select('points').eq('user_id', user.id).maybeSingle(),
+    supabase
+      .from('point_logs')
+      .select('id, delta, reason, created_at')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+      .limit(POINT_LOG_LIMIT),
+    supabase
+      .from('attendance')
+      .select('date')
+      .eq('user_id', user.id)
+      .eq('date', todayKst)
+      .maybeSingle(),
+  ]);
+
+  const profile = profileRes.data;
   if (!profile) redirect('/login');
+
+  const totalPoints = pointsRes.data?.points ?? 0;
+  const logs = logsRes.data ?? [];
+  const attendedToday = !!attRes.data;
 
   return (
     <div className="mx-auto max-w-xl space-y-8">
@@ -37,6 +67,12 @@ export default async function MyProfilePage() {
           <ExternalLink className="h-3.5 w-3.5" />
         </Link>
       </header>
+
+      <PointsPanel
+        totalPoints={totalPoints}
+        attendedToday={attendedToday}
+        logs={logs}
+      />
 
       {profile.role === 'streamer' && profile.chzzk_channel_id && (
         <div className="rounded-lg border border-border bg-muted/30 p-4 text-sm">
