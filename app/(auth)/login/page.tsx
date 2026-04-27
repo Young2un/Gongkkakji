@@ -22,11 +22,11 @@ export default function LoginPage({
           </div>
         )}
 
-        <Link href="/api/auth/chzzk/login" className="block">
+        <a href="/api/auth/chzzk/login" className="block">
           <Button variant="accent" size="lg" className="w-full">
             치지직으로 로그인
           </Button>
-        </Link>
+        </a>
 
         <p className="text-center text-xs text-muted-foreground">
           로그인 시{' '}
