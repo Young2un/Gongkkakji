@@ -6,21 +6,43 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 9%;
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 45%;
-    --border: 0 0% 92%;
-    --input: 0 0% 92%;
+    /* 라이트 모드 (다크모드 베이스지만 기본 설정) */
+    --background: 260 50% 98%;
+    --foreground: 260 20% 10%;
+    
+    --card: 0 0% 100%;
+    --card-foreground: 260 20% 10%;
+    
+    --popover: 0 0% 100%;
+    --popover-foreground: 260 20% 10%;
+    
+    --muted: 260 20% 90%;
+    --muted-foreground: 260 10% 45%;
+    
+    --border: 260 20% 85%;
+    --input: 260 20% 85%;
   }
 
-  .dark {
-    --background: 0 0% 7%;
+  /* 강제 다크모드 또는 다크모드 클래스 적용시 - 트렌디한 모노톤/미니멀 무드 */
+  .dark, body {
+    /* 아주 깊은 차콜 블랙 배경 */
+    --background: 240 10% 4%;
     --foreground: 0 0% 98%;
-    --muted: 0 0% 14%;
-    --muted-foreground: 0 0% 63%;
-    --border: 0 0% 18%;
-    --input: 0 0% 18%;
+    
+    /* 약간 떠있는 느낌의 카드 배경 */
+    --card: 240 5% 8%;
+    --card-foreground: 0 0% 98%;
+    
+    --popover: 240 5% 8%;
+    --popover-foreground: 0 0% 98%;
+    
+    /* 세련된 무채색 계열의 muted */
+    --muted: 240 5% 15%;
+    --muted-foreground: 240 5% 65%;
+    
+    /* 경계선은 아주 은은하게 */
+    --border: 240 5% 15%;
+    --input: 240 5% 15%;
   }
 
   * {
@@ -30,20 +52,36 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-feature-settings: 'ss02', 'ss03';
+    /* 배경 그라데이션 제거, 깔끔한 솔리드 컬러 유지 */
+    background-image: none;
   }
 
-  /* 스크롤바 미니멀 */
+  /* 게이밍 느낌의 스크롤바 */
   ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
   }
   ::-webkit-scrollbar-track {
-    background: transparent;
+    @apply bg-background;
   }
   ::-webkit-scrollbar-thumb {
-    @apply bg-muted rounded-full;
+    @apply bg-primary/40 rounded-full;
   }
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-muted-foreground/30;
+    @apply bg-primary/80;
+  }
+}
+
+@layer utilities {
+  .glass-panel {
+    @apply bg-card/40 backdrop-blur-md border border-white/10 shadow-glass;
+  }
+  
+  .text-glow {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+  }
+  
+  .bg-gradient-text {
+    @apply bg-clip-text text-transparent bg-text-gradient;
   }
 }
