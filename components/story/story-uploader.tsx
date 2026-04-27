@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState, useTransition } from 'react';
+import { createPortal } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import { ImagePlus, Loader2, Plus, X } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
@@ -87,6 +88,12 @@ function UploaderModal({
 
   const supabase = createClient();
 
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   useEffect(() => {
     if (!file) return;
     const url = URL.createObjectURL(file);
@@ -166,13 +173,15 @@ function UploaderModal({
 
   const busy = uploading || isPending;
 
-  return (
+  if (!mounted) return null;
+
+  return createPortal(
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 p-4 backdrop-blur-sm"
       onClick={() => !busy && onClose()}
     >
       <div
-        className="w-full max-w-md space-y-4 rounded-xl border border-border bg-background p-6 shadow-lg"
+        className="w-full max-w-md max-h-[90vh] overflow-y-auto space-y-4 rounded-xl border border-border bg-background p-6 shadow-lg"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between">
@@ -275,6 +284,7 @@ function UploaderModal({
           </Button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
