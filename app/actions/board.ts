@@ -49,13 +49,111 @@ export async function createPost(input: {
     .single();
 
   if (error) {
-    // RLS 위반 시 (streamer_only 카테고리 등)
     return { error: '작성 권한이 없거나 오류가 발생했어요' };
   }
 
   revalidatePath(`/c/${category.slug}`);
   revalidatePath('/');
   redirect(`/c/${category.slug}/${post.id}`);
+}
+
+export async function updatePost(input: {
+  postId: string;
+  categorySlug: string;
+  title: string;
+  content: string;
+  mediaUrls: string[];
+}) {
+  const parsed = postSchema.safeParse(input);
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? '입력값이 올바르지 않습니다' };
+  }
+
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: '로그인이 필요합니다' };
+
+  // 작성자 확인 (RLS로도 보호되지만 명시적 확인)
+  const { data: post } = await supabase
+    .from('posts')
+    .select('author_id')
+    .eq('id', input.postId)
+    .maybeSingle();
+
+  if (!post || post.author_id !== user.id) {
+    // admin인지 확인
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .maybeSingle();
+    
+    if (profile?.role !== 'admin') {
+      return { error: '수정 권한이 없습니다' };
+    }
+  }
+
+  const { error } = await supabase
+    .from('posts')
+    .update({
+      title: parsed.data.title,
+      content: parsed.data.content,
+      media_urls: parsed.data.mediaUrls,
+    })
+    .eq('id', input.postId);
+
+  if (error) {
+    return { error: '수정 중 오류가 발생했어요' };
+  }
+
+  revalidatePath(`/c/${input.categorySlug}/${input.postId}`);
+  revalidatePath(`/c/${input.categorySlug}`);
+  revalidatePath('/');
+  redirect(`/c/${input.categorySlug}/${input.postId}`);
+}
+
+export async function deletePost(input: {
+  postId: string;
+  categorySlug: string;
+}) {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: '로그인이 필요합니다' };
+
+  const { data: post } = await supabase
+    .from('posts')
+    .select('author_id')
+    .eq('id', input.postId)
+    .maybeSingle();
+
+  if (!post || post.author_id !== user.id) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .maybeSingle();
+    
+    if (profile?.role !== 'admin') {
+      return { error: '삭제 권한이 없습니다' };
+    }
+  }
+
+  const { error } = await supabase
+    .from('posts')
+    .delete()
+    .eq('id', input.postId);
+
+  if (error) {
+    return { error: '삭제 중 오류가 발생했어요' };
+  }
+
+  revalidatePath(`/c/${input.categorySlug}`);
+  revalidatePath('/');
+  redirect(`/c/${input.categorySlug}`);
 }
 
 export async function createComment(input: {

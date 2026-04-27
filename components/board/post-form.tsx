@@ -4,22 +4,28 @@ import { useRef, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { ImagePlus, Loader2, X } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
-import { createPost } from '@/app/actions/board';
+import { createPost, updatePost } from '@/app/actions/board';
 import { Button } from '@/components/ui/button';
 
 interface PostFormProps {
   categorySlug: string;
   userId: string;
+  postId?: string;
+  initialData?: {
+    title: string;
+    content: string;
+    mediaUrls: string[];
+  };
 }
 
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPT = 'image/png, image/jpeg, image/webp, image/gif';
 
-export function PostForm({ categorySlug, userId }: PostFormProps) {
+export function PostForm({ categorySlug, userId, postId, initialData }: PostFormProps) {
   const router = useRouter();
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const [mediaUrls, setMediaUrls] = useState<string[]>([]);
+  const [title, setTitle] = useState(initialData?.title ?? '');
+  const [content, setContent] = useState(initialData?.content ?? '');
+  const [mediaUrls, setMediaUrls] = useState<string[]>(initialData?.mediaUrls ?? []);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -74,12 +80,23 @@ export function PostForm({ categorySlug, userId }: PostFormProps) {
       return;
     }
     startTransition(async () => {
-      const res = await createPost({
-        categorySlug,
-        title: title.trim(),
-        content: content.trim(),
-        mediaUrls,
-      });
+      let res;
+      if (postId) {
+        res = await updatePost({
+          postId,
+          categorySlug,
+          title: title.trim(),
+          content: content.trim(),
+          mediaUrls,
+        });
+      } else {
+        res = await createPost({
+          categorySlug,
+          title: title.trim(),
+          content: content.trim(),
+          mediaUrls,
+        });
+      }
       // 성공 시 redirect 되므로 아래는 실패 케이스만
       if (res && 'error' in res && res.error) {
         setError(res.error);
@@ -189,7 +206,7 @@ export function PostForm({ categorySlug, userId }: PostFormProps) {
         </Button>
         <Button type="submit" disabled={isPending || uploading}>
           {isPending && <Loader2 className="h-4 w-4 animate-spin" />}
-          작성하기
+          {postId ? '수정하기' : '작성하기'}
         </Button>
       </div>
     </form>

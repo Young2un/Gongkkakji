@@ -10,6 +10,7 @@ import {
   type CommentItem,
 } from '@/components/board/comment-section';
 import { ViewCounter } from '@/components/board/view-counter';
+import { PostActions } from '@/components/board/post-actions';
 
 export default async function PostDetailPage({
   params,
@@ -102,6 +103,10 @@ export default async function PostDetailPage({
     };
   });
 
+  const canEdit =
+    currentUserProfile &&
+    (currentUserProfile.id === post.author_id || currentUserProfile.role === 'admin');
+
   return (
     <article className="space-y-8">
       <ViewCounter postId={post.id} />
@@ -115,7 +120,14 @@ export default async function PostDetailPage({
       </Link>
 
       <header className="space-y-4 border-b border-border pb-6">
-        <h1 className="text-3xl font-bold tracking-tight">{post.title}</h1>
+        <div className="flex items-start justify-between gap-4">
+          <h1 className="text-3xl font-bold tracking-tight break-words flex-1">
+            {post.title}
+          </h1>
+          {canEdit && (
+            <PostActions postId={post.id} categorySlug={category.slug} />
+          )}
+        </div>
         <div className="flex items-center justify-between">
           <AuthorBadge author={author} size="md" />
           <div className="flex items-center gap-3 text-xs text-muted-foreground">
