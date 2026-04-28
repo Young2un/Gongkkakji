@@ -41,11 +41,27 @@ export async function GET(req: NextRequest) {
       .eq('chzzk_channel_id', chzzkUser.channelId)
       .maybeSingle();
 
-    let userId: string;
+    let userId: string | null = null;
 
     if (existing) {
-      userId = existing.id;
-    } else {
+      // auth.users에 실제로 존재하는지 확인 (admin이 강제로 지운 경우 orphan)
+      const { data: authUser } = await supabase.auth.admin.getUserById(
+        existing.id
+      );
+
+      if (authUser?.user) {
+        userId = existing.id;
+        // CHZZK_CLIENT_SECRET이 바뀌어도 로그인이 끊기지 않도록
+        // 매 로그인마다 현재 secret 기준 password로 동기화
+        await supabase.auth.admin.updateUserById(userId, { password });
+      } else {
+        // orphan profile → 삭제하고 아래 신규 생성 플로우로 진행
+        await supabase.from('profiles').delete().eq('id', existing.id);
+        await supabase.from('chzzk_tokens').delete().eq('user_id', existing.id);
+      }
+    }
+
+    if (!userId) {
       // 신규 생성
       const { data: created, error } = await supabase.auth.admin.createUser({
         email,
