@@ -2,7 +2,6 @@ import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { Button } from '@/components/ui/button';
 import { StoryUploader } from '@/components/story/story-uploader';
-import { AttendanceButton } from '@/components/attendance/attendance-button';
 import { LogoutButton } from '@/components/layout/logout-button';
 import { LogIn, User } from 'lucide-react';
 
@@ -13,7 +12,6 @@ export async function SiteHeader() {
   } = await supabase.auth.getUser();
 
   let profile = null;
-  let attendedToday = false;
   if (user) {
     const { data } = await supabase
       .from('profiles')
@@ -21,20 +19,6 @@ export async function SiteHeader() {
       .eq('id', user.id)
       .maybeSingle();
     profile = data;
-
-    // KST 기준 오늘 날짜로 출석 여부 확인
-    const todayKst = new Date(
-      new Date().toLocaleString('en-US', { timeZone: 'Asia/Seoul' })
-    )
-      .toISOString()
-      .slice(0, 10);
-    const { data: att } = await supabase
-      .from('attendance')
-      .select('date')
-      .eq('user_id', user.id)
-      .eq('date', todayKst)
-      .maybeSingle();
-    attendedToday = !!att;
   }
 
   return (
@@ -54,7 +38,7 @@ export async function SiteHeader() {
             href="/bubble"
             className="rounded-md px-3 py-2 text-sm text-primary transition-all hover:bg-primary/10 font-bold"
           >
-            공은톡
+            공은talk
           </Link>
           <Link
             href="/c/notice"
@@ -77,7 +61,6 @@ export async function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
-          {user && <AttendanceButton initialAttended={attendedToday} />}
           {user && <StoryUploader userId={user.id} trigger="icon" />}
           {profile ? (
             <div className="flex items-center gap-2">

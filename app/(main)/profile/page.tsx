@@ -15,14 +15,7 @@ export default async function MyProfilePage() {
   } = await supabase.auth.getUser();
   if (!user) redirect('/login?redirect=/profile');
 
-  // KST 기준 오늘
-  const todayKst = new Date(
-    new Date().toLocaleString('en-US', { timeZone: 'Asia/Seoul' })
-  )
-    .toISOString()
-    .slice(0, 10);
-
-  const [profileRes, pointsRes, logsRes, attRes] = await Promise.all([
+  const [profileRes, pointsRes, logsRes] = await Promise.all([
     supabase
       .from('profiles')
       .select('username, display_name, bio, avatar_url, role, chzzk_channel_id')
@@ -35,12 +28,6 @@ export default async function MyProfilePage() {
       .eq('user_id', user.id)
       .order('created_at', { ascending: false })
       .limit(POINT_LOG_LIMIT),
-    supabase
-      .from('attendance')
-      .select('date')
-      .eq('user_id', user.id)
-      .eq('date', todayKst)
-      .maybeSingle(),
   ]);
 
   const profile = profileRes.data;
@@ -48,7 +35,6 @@ export default async function MyProfilePage() {
 
   const totalPoints = pointsRes.data?.points ?? 0;
   const logs = logsRes.data ?? [];
-  const attendedToday = !!attRes.data;
 
   return (
     <div className="mx-auto max-w-xl space-y-8">
@@ -68,11 +54,7 @@ export default async function MyProfilePage() {
         </Link>
       </header>
 
-      <PointsPanel
-        totalPoints={totalPoints}
-        attendedToday={attendedToday}
-        logs={logs}
-      />
+      <PointsPanel totalPoints={totalPoints} logs={logs} />
 
       {profile.role === 'streamer' && profile.chzzk_channel_id && (
         <div className="rounded-lg border border-border bg-muted/30 p-4 text-sm">

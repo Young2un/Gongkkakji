@@ -3,7 +3,7 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: '공은이를 향한 박수갈채',
-  description: '치지직 스트리머와 팬들의 공간',
+  description: '공으니와 팬둘의 공간',
   manifest: '/manifest.json',
   applicationName: '공깍지',
   appleWebApp: {

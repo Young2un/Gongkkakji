@@ -1,4 +1,4 @@
-import { Coins, Gift } from 'lucide-react';
+import { Coins } from 'lucide-react';
 import { timeAgo } from '@/lib/utils';
 
 interface PointLog {
@@ -10,11 +10,10 @@ interface PointLog {
 
 interface Props {
   totalPoints: number;
-  attendedToday: boolean;
   logs: PointLog[];
 }
 
-export function PointsPanel({ totalPoints, attendedToday, logs }: Props) {
+export function PointsPanel({ totalPoints, logs }: Props) {
   return (
     <section className="space-y-4">
       <div className="flex items-center gap-4 rounded-xl border border-border bg-muted/30 p-5">
@@ -26,16 +25,6 @@ export function PointsPanel({ totalPoints, attendedToday, logs }: Props) {
           <p className="text-2xl font-bold tracking-tight">
             {totalPoints.toLocaleString()}P
           </p>
-        </div>
-        <div
-          className={
-            attendedToday
-              ? 'inline-flex items-center gap-1 rounded-full bg-muted px-3 py-1.5 text-xs text-muted-foreground'
-              : 'inline-flex items-center gap-1 rounded-full bg-accent/10 px-3 py-1.5 text-xs text-accent'
-          }
-        >
-          <Gift className={attendedToday ? 'h-3.5 w-3.5' : 'h-3.5 w-3.5 fill-current'} />
-          {attendedToday ? '오늘 출석 완료' : '헤더에서 출석하고 +10P'}
         </div>
       </div>
 
