@@ -2,6 +2,8 @@ import { notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { StoryViewer, type StoryViewerItem } from '@/components/story/story-viewer';
 
+export const dynamic = 'force-dynamic';
+
 export default async function StoryPage({
   params,
 }: {
@@ -9,16 +11,20 @@ export default async function StoryPage({
 }) {
   const supabase = createClient();
 
-  // 해당 스토리와 작성자 정보
-  const { data: story } = await supabase
+  // 해당 스토리 (조인 없이 — 조인 실패로 row가 통째로 null로 오는 것 방지)
+  const { data: story, error: storyErr } = await supabase
     .from('stories')
-    .select(
-      'id, author_id, expires_at, is_archived, author:profiles(id, username, display_name, avatar_url, role)'
-    )
+    .select('id, author_id, expires_at, is_archived')
     .eq('id', params.id)
     .maybeSingle();
 
-  if (!story) notFound();
+  if (storyErr) {
+    console.error('[story-page] stories select error', { id: params.id, storyErr });
+  }
+  if (!story) {
+    console.error('[story-page] story not found / blocked by RLS', { id: params.id });
+    notFound();
+  }
 
   // 만료/아카이브된 스토리는 본인만 열람 가능
   const {
@@ -29,8 +35,20 @@ export default async function StoryPage({
   const isOwner = !!user && user.id === story.author_id;
   if (isExpired && !isOwner) notFound();
 
-  const author = Array.isArray(story.author) ? story.author[0] : story.author;
-  if (!author) notFound();
+  // 작성자 프로필
+  const { data: author, error: authorErr } = await supabase
+    .from('profiles')
+    .select('id, username, display_name, avatar_url, role')
+    .eq('id', story.author_id)
+    .maybeSingle();
+
+  if (authorErr) {
+    console.error('[story-page] profiles select error', { authorId: story.author_id, authorErr });
+  }
+  if (!author) {
+    console.error('[story-page] author profile missing', { authorId: story.author_id });
+    notFound();
+  }
 
   // 같은 작성자의 활성 스토리 전체
   const { data: rows } = await supabase
