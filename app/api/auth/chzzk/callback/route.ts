@@ -42,13 +42,14 @@ export async function GET(req: NextRequest) {
       .maybeSingle();
 
     const createNewUser = async (): Promise<string> => {
+      // user_metadata에 한글이 들어가면 Supabase admin SDK 내부에서
+      // ByteString 변환 에러가 나므로 ASCII만 남기고, 표시 이름은 profiles에서 관리
       const { data: created, error } = await supabase.auth.admin.createUser({
         email,
         password,
         email_confirm: true,
         user_metadata: {
           chzzk_channel_id: chzzkUser.channelId,
-          chzzk_channel_name: chzzkUser.channelName,
         },
       });
 
