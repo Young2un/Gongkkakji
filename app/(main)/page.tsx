@@ -3,6 +3,8 @@ import { createClient } from '@/lib/supabase/server';
 import { timeAgo } from '@/lib/utils';
 import { Play, MessageSquare, Video, ArrowRight, Star, ExternalLink, Megaphone } from 'lucide-react';
 import { getStreamerLive } from '@/lib/chzzk';
+import { UpcomingEvents } from '@/components/calendar/upcoming-events';
+import type { EventRow } from '@/lib/events';
 
 export default async function HomePage() {
   const supabase = createClient();
@@ -24,6 +26,12 @@ export default async function HomePage() {
     .eq('categories.slug', 'clips')
     .order('created_at', { ascending: false })
     .limit(2);
+
+  // 다가오는 일정
+  const { data: events } = await supabase
+    .from('events')
+    .select('*')
+    .order('starts_at', { ascending: true });
 
   // 최근 자유게시판 글 4개
   const { data: freePosts } = await supabase
@@ -103,6 +111,9 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* 다가오는 일정 */}
+      <UpcomingEvents events={(events ?? []) as EventRow[]} />
 
       {/* 2. 벤토 박스 (Bento Box) 그리드 레이아웃 */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
