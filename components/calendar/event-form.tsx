@@ -112,29 +112,30 @@ export function EventForm({ open, onClose, initial }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div className="w-full max-w-md rounded-2xl border border-white/10 bg-card shadow-2xl">
-        <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm p-0 sm:p-4">
+      <div className="w-full max-w-md max-h-[92vh] sm:max-h-[85vh] flex flex-col rounded-t-2xl sm:rounded-2xl border border-white/10 bg-card shadow-2xl">
+        <div className="flex items-center justify-between border-b border-white/10 px-5 py-4 shrink-0">
           <h2 className="text-base font-bold text-white">
             {isEdit ? '일정 수정' : '새 일정'}
           </h2>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-full p-1 text-muted-foreground hover:bg-white/10 hover:text-white"
+            className="rounded-full p-2 -mr-1 text-muted-foreground hover:bg-white/10 hover:text-white min-w-[40px] min-h-[40px] flex items-center justify-center"
+            aria-label="닫기"
           >
             <X className="h-4 w-4" />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4 p-5">
+        <form onSubmit={handleSubmit} className="space-y-4 p-5 overflow-y-auto flex-1">
           {/* 종류 */}
           <div className="grid grid-cols-2 gap-2">
             <button
               type="button"
               onClick={() => setType('broadcast')}
               className={cn(
-                'rounded-lg border px-3 py-2 text-sm font-medium transition',
+                'rounded-lg border px-3 py-3 text-sm font-medium transition min-h-[44px]',
                 type === 'broadcast'
                   ? 'border-primary/60 bg-primary/15 text-primary'
                   : 'border-white/10 bg-white/5 text-muted-foreground hover:bg-white/10'
@@ -146,7 +147,7 @@ export function EventForm({ open, onClose, initial }: Props) {
               type="button"
               onClick={() => setType('anniversary')}
               className={cn(
-                'rounded-lg border px-3 py-2 text-sm font-medium transition',
+                'rounded-lg border px-3 py-3 text-sm font-medium transition min-h-[44px]',
                 type === 'anniversary'
                   ? 'border-accent/60 bg-accent/15 text-accent'
                   : 'border-white/10 bg-white/5 text-muted-foreground hover:bg-white/10'
@@ -169,7 +170,7 @@ export function EventForm({ open, onClose, initial }: Props) {
               placeholder={
                 isAnniversary ? '예: 김공은 생일' : '예: 오늘 9시 OW 랭크'
               }
-              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-muted-foreground/60 focus:border-primary/50 focus:outline-none"
+              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-base sm:text-sm text-white placeholder:text-muted-foreground/60 focus:border-primary/50 focus:outline-none min-h-[44px]"
               required
             />
           </label>
@@ -183,7 +184,7 @@ export function EventForm({ open, onClose, initial }: Props) {
               type={isAnniversary ? 'date' : 'datetime-local'}
               value={startsAt}
               onChange={(e) => setStartsAt(e.target.value)}
-              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-primary/50 focus:outline-none"
+              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-base sm:text-sm text-white focus:border-primary/50 focus:outline-none min-h-[44px] [color-scheme:dark]"
               required
             />
           </label>
@@ -198,7 +199,7 @@ export function EventForm({ open, onClose, initial }: Props) {
                 type="datetime-local"
                 value={endsAt}
                 onChange={(e) => setEndsAt(e.target.value)}
-                className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-primary/50 focus:outline-none"
+                className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-base sm:text-sm text-white focus:border-primary/50 focus:outline-none min-h-[44px] [color-scheme:dark]"
               />
             </label>
           )}
@@ -227,7 +228,7 @@ export function EventForm({ open, onClose, initial }: Props) {
               maxLength={500}
               rows={3}
               placeholder="추가 설명을 입력하세요"
-              className="w-full resize-none rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-muted-foreground/60 focus:border-primary/50 focus:outline-none"
+              className="w-full resize-none rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-base sm:text-sm text-white placeholder:text-muted-foreground/60 focus:border-primary/50 focus:outline-none"
             />
           </label>
 

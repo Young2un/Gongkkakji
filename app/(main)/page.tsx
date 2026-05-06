@@ -42,16 +42,16 @@ export default async function HomePage() {
     .limit(4);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* 1. 크리에이티브 히어로 섹션 */}
-      <section className="relative overflow-hidden rounded-3xl border border-white/5 bg-card/40 p-8 sm:p-12 shadow-2xl backdrop-blur-xl">
+      <section className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-white/5 bg-card/40 p-5 sm:p-8 md:p-12 shadow-2xl backdrop-blur-xl">
         {/* 배경 애니메이션 효과 */}
         <div className="absolute -top-24 -right-24 h-96 w-96 rounded-full bg-primary/10 blur-[100px] animate-pulse-slow" />
         <div className="absolute -bottom-24 -left-24 h-96 w-96 rounded-full bg-secondary/10 blur-[100px] animate-pulse-slow" style={{ animationDelay: '2s' }} />
         <div className="absolute inset-0 bg-black/40 opacity-50 mix-blend-overlay" />
 
-        <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
-          <div className="flex-1 space-y-6 text-center md:text-left">
+        <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 md:gap-8">
+          <div className="flex-1 space-y-4 sm:space-y-6 text-center md:text-left">
             {live ? (
               <div className="inline-flex items-center rounded-full border border-live/20 bg-live/10 px-3 py-1 text-xs font-bold text-live">
                 <span className="mr-2 flex h-2 w-2 rounded-full bg-live animate-ping"></span>
@@ -63,30 +63,30 @@ export default async function HomePage() {
                 OFF AIR : 다음 방송에서 만나요
               </div>
             )}
-            
-            <h1 className="text-5xl sm:text-6xl font-black tracking-tighter">
-              <span className="block text-white/90 mb-2">스트리머 김공은</span>
+
+            <h1 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tighter">
+              <span className="block text-white/90 mb-1 sm:mb-2">스트리머 김공은</span>
               <span className="text-primary pr-2">공식 팬카페</span>
             </h1>
-            
-            <p className="text-muted-foreground text-lg max-w-lg mx-auto md:mx-0 leading-relaxed">
+
+            <p className="text-muted-foreground text-sm sm:text-lg max-w-lg mx-auto md:mx-0 leading-relaxed">
               방송 시간은 유동적! 주로 퇴근 후 방송을 켭니다.<br/>
               다양한 게임과 소통으로 즐거운 시간을 함께해요.
             </p>
 
-            <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 pt-2">
-              <a 
-                href={process.env.STREAMER_CHANNEL_ID ? `https://chzzk.naver.com/${live ? 'live/' : ''}${process.env.STREAMER_CHANNEL_ID}` : "https://chzzk.naver.com"} 
-                target="_blank" 
+            <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 sm:gap-3 pt-1 sm:pt-2">
+              <a
+                href={process.env.STREAMER_CHANNEL_ID ? `https://chzzk.naver.com/${live ? 'live/' : ''}${process.env.STREAMER_CHANNEL_ID}` : "https://chzzk.naver.com"}
+                target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-bold text-white transition-all hover:scale-105 hover:bg-primary/90"
+                className="inline-flex items-center gap-2 rounded-full bg-primary px-5 sm:px-6 py-2.5 sm:py-3 text-sm font-bold text-white transition-all hover:scale-105 hover:bg-primary/90 min-h-[44px]"
               >
                 <Play className="h-4 w-4 fill-current" />
                 {live ? '방송 보러가기' : '채널 구경하기'}
               </a>
-              <Link 
+              <Link
                 href="/c/free"
-                className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-6 py-3 text-sm font-bold text-white backdrop-blur-md transition-all hover:bg-white/10 hover:border-white/40"
+                className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-5 sm:px-6 py-2.5 sm:py-3 text-sm font-bold text-white backdrop-blur-md transition-all hover:bg-white/10 hover:border-white/40 min-h-[44px]"
               >
                 <MessageSquare className="h-4 w-4" />
                 자유게시판 구경하기
@@ -119,7 +119,7 @@ export default async function HomePage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         
         {/* 공지사항 (Span 2) */}
-        <div className="md:col-span-2 rounded-2xl border border-white/5 bg-card/40 backdrop-blur-md p-6 flex flex-col justify-between group hover:border-primary/30 transition-colors">
+        <div className="md:col-span-2 rounded-2xl border border-white/5 bg-card/40 backdrop-blur-md p-4 sm:p-6 flex flex-col justify-between group hover:border-primary/30 transition-colors">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2 text-primary font-bold">
               <Megaphone className="h-5 w-5" />
@@ -144,7 +144,7 @@ export default async function HomePage() {
         </div>
 
         {/* 소셜 링크 (Span 1) */}
-        <div className="rounded-2xl border border-white/5 bg-card/40 backdrop-blur-md p-6 flex flex-col justify-center items-center gap-4">
+        <div className="rounded-2xl border border-white/5 bg-card/40 backdrop-blur-md p-4 sm:p-6 flex flex-col justify-center items-center gap-4">
           <h2 className="text-sm font-bold text-muted-foreground uppercase tracking-widest mb-2">Social Links</h2>
           <div className="flex gap-3 w-full justify-center">
             <a href="#" className="flex h-12 w-12 items-center justify-center rounded-full bg-[#00FFA3]/10 text-[#00FFA3] hover:bg-[#00FFA3]/20 hover:scale-110 transition-all border border-[#00FFA3]/20" title="치지직">
@@ -163,7 +163,7 @@ export default async function HomePage() {
         </div>
 
         {/* 최근 클립 (Span 1) */}
-        <div className="rounded-2xl border border-white/5 bg-card/40 backdrop-blur-md p-6 flex flex-col">
+        <div className="rounded-2xl border border-white/5 bg-card/40 backdrop-blur-md p-4 sm:p-6 flex flex-col">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2 text-accent font-bold">
               <Video className="h-5 w-5" />
@@ -194,7 +194,7 @@ export default async function HomePage() {
         </div>
 
         {/* 최근 자유게시판 (Span 2) */}
-        <div className="md:col-span-2 rounded-2xl border border-white/5 bg-card/40 backdrop-blur-md p-6 flex flex-col">
+        <div className="md:col-span-2 rounded-2xl border border-white/5 bg-card/40 backdrop-blur-md p-4 sm:p-6 flex flex-col">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2 text-white font-bold">
               <MessageSquare className="h-5 w-5" />

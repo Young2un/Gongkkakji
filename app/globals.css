@@ -49,12 +49,22 @@
     @apply border-border;
   }
 
+  html, body {
+    /* 모바일 가로 스크롤 방지 */
+    overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
+  }
+
   body {
     @apply bg-background text-foreground antialiased;
     font-feature-settings: 'ss02', 'ss03';
     /* 배경 그라데이션 제거, 깔끔한 솔리드 컬러 유지 */
     background-image: none;
+    /* iOS notch/home indicator 안전영역 */
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
   }
+
 
   /* 게이밍 느낌의 스크롤바 */
   ::-webkit-scrollbar {

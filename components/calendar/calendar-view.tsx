@@ -102,46 +102,46 @@ export function CalendarView({ events, canEdit }: Props) {
   return (
     <div className="space-y-4">
       {/* 헤더 */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-1">
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-0.5 sm:gap-1 min-w-0">
           <button
             onClick={goPrev}
-            className="rounded-lg border border-white/10 bg-white/5 p-2 text-muted-foreground hover:bg-white/10 hover:text-white"
+            className="rounded-lg border border-white/10 bg-white/5 p-2 text-muted-foreground hover:bg-white/10 hover:text-white min-w-[40px] min-h-[40px] flex items-center justify-center"
             aria-label="이전 달"
           >
             <ChevronLeft className="h-4 w-4" />
           </button>
-          <h1 className="px-3 text-xl font-bold text-white">
+          <h1 className="px-2 sm:px-3 text-base sm:text-xl font-bold text-white whitespace-nowrap">
             {year}년 {month + 1}월
           </h1>
           <button
             onClick={goNext}
-            className="rounded-lg border border-white/10 bg-white/5 p-2 text-muted-foreground hover:bg-white/10 hover:text-white"
+            className="rounded-lg border border-white/10 bg-white/5 p-2 text-muted-foreground hover:bg-white/10 hover:text-white min-w-[40px] min-h-[40px] flex items-center justify-center"
             aria-label="다음 달"
           >
             <ChevronRight className="h-4 w-4" />
           </button>
-          <Button variant="ghost" size="sm" onClick={goToday} className="ml-2">
+          <Button variant="ghost" size="sm" onClick={goToday} className="ml-1 sm:ml-2 shrink-0">
             오늘
           </Button>
         </div>
 
         {canEdit && (
-          <Button variant="accent" size="sm" onClick={openCreate}>
+          <Button variant="accent" size="sm" onClick={openCreate} className="shrink-0">
             <Plus className="h-4 w-4" />
-            일정 추가
+            <span className="hidden sm:inline">일정 추가</span>
           </Button>
         )}
       </div>
 
       {/* 월간 그리드 */}
-      <div className="rounded-2xl border border-white/5 bg-card/40 backdrop-blur-md p-3 sm:p-4">
-        <div className="mb-2 grid grid-cols-7 text-center text-xs font-bold text-muted-foreground">
+      <div className="rounded-2xl border border-white/5 bg-card/40 backdrop-blur-md p-2 sm:p-4">
+        <div className="mb-1 sm:mb-2 grid grid-cols-7 text-center text-[10px] sm:text-xs font-bold text-muted-foreground">
           {WEEKDAYS.map((w, i) => (
             <div
               key={w}
               className={cn(
-                'py-2',
+                'py-1.5 sm:py-2',
                 i === 0 && 'text-red-400',
                 i === 6 && 'text-blue-400'
               )}
@@ -150,32 +150,34 @@ export function CalendarView({ events, canEdit }: Props) {
             </div>
           ))}
         </div>
-        <div className="grid grid-cols-7 gap-1">
+        <div className="grid grid-cols-7 gap-0.5 sm:gap-1">
           {cells.map((cell, idx) => {
             if (!cell.day || !cell.key) {
-              return <div key={`empty-${idx}`} className="aspect-square" />;
+              return <div key={`empty-${idx}`} className="aspect-[3/4] sm:aspect-square" />;
             }
             const dayEvents = byDate.get(cell.key) ?? [];
             const isToday = cell.key === todayKey;
             const isSelected = cell.key === selectedKey;
             const dayOfWeek = idx % 7;
+            const hasBroadcast = dayEvents.some((e) => e.type === 'broadcast');
+            const hasAnniversary = dayEvents.some((e) => e.type === 'anniversary');
             return (
               <button
                 key={cell.key}
                 type="button"
                 onClick={() => setSelectedKey(cell.key!)}
                 className={cn(
-                  'relative flex aspect-square flex-col items-stretch rounded-lg border p-1.5 text-left transition',
+                  'relative flex aspect-[3/4] sm:aspect-square flex-col items-stretch rounded-md sm:rounded-lg border p-1 sm:p-1.5 text-left transition',
                   isSelected
                     ? 'border-primary/60 bg-primary/15'
                     : isToday
                     ? 'border-accent/40 bg-accent/5'
-                    : 'border-white/5 bg-white/5 hover:bg-white/10'
+                    : 'border-white/5 bg-white/5 hover:bg-white/10 active:bg-white/15'
                 )}
               >
                 <span
                   className={cn(
-                    'text-xs font-bold',
+                    'text-xs sm:text-sm font-bold',
                     isToday && 'text-accent',
                     !isToday && dayOfWeek === 0 && 'text-red-400',
                     !isToday && dayOfWeek === 6 && 'text-blue-400',
@@ -184,7 +186,19 @@ export function CalendarView({ events, canEdit }: Props) {
                 >
                   {cell.day}
                 </span>
-                <div className="mt-auto flex flex-col gap-0.5">
+
+                {/* 모바일: 점 인디케이터 */}
+                <div className="mt-auto flex sm:hidden items-center justify-center gap-1 pb-0.5">
+                  {hasBroadcast && (
+                    <span className="h-1.5 w-1.5 rounded-full bg-primary" aria-label="방송" />
+                  )}
+                  {hasAnniversary && (
+                    <span className="h-1.5 w-1.5 rounded-full bg-accent" aria-label="기념일" />
+                  )}
+                </div>
+
+                {/* 데스크톱: 칩 */}
+                <div className="mt-auto hidden sm:flex flex-col gap-0.5">
                   {dayEvents.slice(0, 2).map((occ) => (
                     <div
                       key={occ.id}

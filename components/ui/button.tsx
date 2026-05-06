@@ -22,8 +22,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             accent: 'bg-accent text-accent-foreground hover:bg-accent-hover',
           }[variant],
           {
-            sm: 'h-8 px-3 text-sm',
-            md: 'h-10 px-4 text-sm',
+            sm: 'h-9 px-3 text-sm',
+            md: 'h-11 px-4 text-sm',
             lg: 'h-12 px-6 text-base',
           }[size],
           className
