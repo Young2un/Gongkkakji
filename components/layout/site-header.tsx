@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { Button } from '@/components/ui/button';
 import { StoryUploader } from '@/components/story/story-uploader';
 import { LogoutButton } from '@/components/layout/logout-button';
-import { LogIn, User } from 'lucide-react';
+import { LogIn, User, CircleDot } from 'lucide-react';
 
 export async function SiteHeader() {
   const supabase = createClient();
@@ -65,6 +65,15 @@ export async function SiteHeader() {
           >
             일정
           </Link>
+          {profile && (profile.role === 'streamer' || profile.role === 'admin') && (
+            <Link
+              href="/admin/roulette"
+              className="rounded-md px-3 py-2 text-sm text-accent transition-all hover:bg-accent/10 font-bold inline-flex items-center gap-1.5"
+            >
+              <CircleDot className="h-4 w-4" />
+              룰렛
+            </Link>
+          )}
         </nav>
 
         <div className="flex items-center gap-1.5 md:gap-2">

@@ -2,12 +2,28 @@ import { LiveStatusBanner } from '@/components/layout/live-status-banner';
 import { SiteHeader } from '@/components/layout/site-header';
 import { BottomNav } from '@/components/layout/bottom-nav';
 import { StoryBar } from '@/components/story/story-bar';
+import { createClient } from '@/lib/supabase/server';
 
-export default function MainLayout({
+export default async function MainLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  let isStreamer = false;
+  if (user) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .maybeSingle();
+    isStreamer = profile?.role === 'streamer' || profile?.role === 'admin';
+  }
+
   return (
     <div className="min-h-screen bg-background dark text-foreground overflow-x-hidden">
       <LiveStatusBanner />
@@ -18,7 +34,7 @@ export default function MainLayout({
       >
         {children}
       </main>
-      <BottomNav />
+      <BottomNav isStreamer={isStreamer} />
     </div>
   );
 }
