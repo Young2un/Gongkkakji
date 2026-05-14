@@ -37,11 +37,11 @@ const config: Config = {
           hover: '#E11D48', // Rose 600
         },
         
-        // 치지직 그린 포인트
+        // 치지직 그린 포인트 (흰 글씨 가독성 확보 위해 한 단계 어둡게)
         accent: {
-          DEFAULT: '#00C896',
+          DEFAULT: '#00876A',
           foreground: '#ffffff',
-          hover: '#00A37A',
+          hover: '#006B53',
         },
         
         muted: {
