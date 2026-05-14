@@ -37,11 +37,11 @@ const config: Config = {
           hover: '#E11D48', // Rose 600
         },
         
-        // 오버워치 오렌지 포인트 (조금 더 세련된 앰버)
+        // 치지직 그린 포인트
         accent: {
-          DEFAULT: '#F59E0B', // Amber 500
+          DEFAULT: '#00C896',
           foreground: '#ffffff',
-          hover: '#D97706', // Amber 600
+          hover: '#00A37A',
         },
         
         muted: {
