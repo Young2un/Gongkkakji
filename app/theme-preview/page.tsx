@@ -236,7 +236,7 @@ function Sample({ p }: { p: Palette }) {
             ON AIR
           </div>
           <h3 className="text-2xl font-black tracking-tighter" style={{ color: p.text }}>
-            스트리머 김공은
+            김공은
             <br />
             <span style={{ color: p.primary }}>공식 팬카페</span>
           </h3>

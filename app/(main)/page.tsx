@@ -65,7 +65,7 @@ export default async function HomePage() {
             )}
 
             <h1 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tighter">
-              <span className="block text-white/90 mb-1 sm:mb-2">스트리머 김공은</span>
+              <span className="block text-white/90 mb-1 sm:mb-2">치지직 김공은</span>
               <span className="text-primary pr-2">공식 팬카페</span>
             </h1>
 
