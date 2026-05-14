@@ -27,7 +27,7 @@ export async function SiteHeader() {
         <Link href="/" className="group flex items-center transition-transform hover:scale-105 shrink-0">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/images/logo.png"
+            src="/images/logo-header.png"
             alt="공깍지 로고"
             className="h-10 md:h-20 w-auto object-contain -ml-1 md:-ml-2"
           />
