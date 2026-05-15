@@ -112,7 +112,7 @@ export function StoryViewer({
               <div className="font-medium">
                 {author.display_name ?? author.username}
                 {author.role === 'streamer' && (
-                  <span className="ml-1 rounded bg-accent px-1.5 py-0.5 text-xs">
+                  <span className="ml-1 rounded bg-accent px-1.5 py-0.5 text-xs text-accent-foreground">
                     STREAMER
                   </span>
                 )}

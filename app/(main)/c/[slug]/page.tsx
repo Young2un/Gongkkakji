@@ -66,7 +66,7 @@ export default async function CategoryListPage({
               {category.name}
             </h1>
             {category.streamer_only && (
-              <span className="rounded bg-accent px-2 py-0.5 text-xs text-white">
+              <span className="rounded bg-accent px-2 py-0.5 text-xs text-accent-foreground">
                 STREAMER ONLY
               </span>
             )}
@@ -78,7 +78,7 @@ export default async function CategoryListPage({
           )}
         </div>
         <Link href={`/c/${category.slug}/new`}>
-          <Button size="sm">
+          <Button size="sm" variant="accent">
             <PencilLine className="h-4 w-4" />
             글쓰기
           </Button>

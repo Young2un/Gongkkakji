@@ -42,7 +42,7 @@ export function AuthorBadge({ author, size = 'sm', className }: AuthorBadgeProps
           {author?.display_name ?? author?.username ?? '알 수 없음'}
         </span>
         {author?.role === 'streamer' && (
-          <span className="ml-1 rounded bg-accent px-1.5 py-0.5 text-xs text-white">
+          <span className="ml-1 rounded bg-accent px-1.5 py-0.5 text-xs text-accent-foreground">
             STREAMER
           </span>
         )}

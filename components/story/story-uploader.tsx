@@ -56,7 +56,7 @@ export function StoryUploader({
             ) : (
               <div className="h-full w-full rounded-full bg-muted" />
             )}
-            <span className="absolute -bottom-0.5 -right-0.5 flex h-6 w-6 items-center justify-center rounded-full border-2 border-background bg-accent text-white">
+            <span className="absolute -bottom-0.5 -right-0.5 flex h-6 w-6 items-center justify-center rounded-full border-2 border-background bg-accent text-accent-foreground">
               <Plus className="h-3.5 w-3.5" />
             </span>
           </div>

@@ -209,7 +209,7 @@ export function RouletteWheel({
         style={{ filter: overlay ? 'drop-shadow(0 2px 6px rgba(0,0,0,0.6))' : undefined }}
       >
         <svg width={32} height={36} viewBox="0 0 32 36">
-          <path d="M16 36 L4 6 Q16 0 28 6 Z" fill="#00876A" stroke="#fff" strokeWidth={2} />
+          <path d="M16 36 L4 6 Q16 0 28 6 Z" fill="#1FE89E" stroke="#fff" strokeWidth={2} />
         </svg>
       </div>
     </div>

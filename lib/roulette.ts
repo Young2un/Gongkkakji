@@ -32,7 +32,7 @@ export interface RouletteSpinRow {
 
 /** 기본 팔레트 — 항목별 color 미지정 시 순환. */
 export const DEFAULT_PALETTE = [
-  '#00876A', // 액센트 그린
+  '#1FE89E', // 액센트 그린
   '#5BCEFA',
   '#F5A8C8',
   '#86E6A1',

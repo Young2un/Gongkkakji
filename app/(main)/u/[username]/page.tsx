@@ -83,7 +83,7 @@ export default async function PublicProfilePage({
               {profile.display_name ?? profile.username}
             </h1>
             {isStreamer && (
-              <span className="rounded bg-accent px-2 py-0.5 text-xs font-medium text-white">
+              <span className="rounded bg-accent px-2 py-0.5 text-xs font-medium text-accent-foreground">
                 STREAMER
               </span>
             )}
