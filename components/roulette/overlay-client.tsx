@@ -28,7 +28,10 @@ export function OverlayClient({ wheel, initialItems }: Props) {
     return m;
   }, [items]);
 
-  // Realtime: roulette_spins INSERT 구독 + 항목 변경도 같이 구독
+  // Realtime: roulette_spins INSERT 구독.
+  // 주의: 한 채널에 publication에 없는 테이블 바인딩을 같이 걸면
+  // 채널 자체가 ERROR로 떨어져서 spins 이벤트도 못 받는 케이스가 있음.
+  // 그래서 roulette_items 구독은 일부러 뺐다 — items는 페이지 새로고침으로 갱신.
   useEffect(() => {
     const supabase = createClient();
 
@@ -50,25 +53,11 @@ export function OverlayClient({ wheel, initialItems }: Props) {
           setPhase('spinning');
         }
       )
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'roulette_items',
-          filter: `wheel_id=eq.${wheel.id}`,
-        },
-        async () => {
-          // 항목이 추가/수정/삭제되면 다시 fetch
-          const { data } = await supabase
-            .from('roulette_items')
-            .select('id, wheel_id, label, color, position, weight, created_at')
-            .eq('wheel_id', wheel.id)
-            .order('position', { ascending: true });
-          if (data) setItems(data as RouletteItemRow[]);
-        }
-      )
-      .subscribe();
+      .subscribe((status, err) => {
+        // 구독 상태 확인용 (콘솔로 확인). 정상이면 'SUBSCRIBED'.
+        // CHANNEL_ERROR / TIMED_OUT 이면 RLS / publication 문제.
+        console.log('[roulette-overlay] realtime status:', status, err);
+      });
 
     return () => {
       supabase.removeChannel(channel);

@@ -83,24 +83,50 @@ export function RouletteWheel({
     const seg = segments[idx];
     if (!seg) return;
 
-    // 결과 슬라이스 중앙각 (0이 12시, 시계방향)
+    // 결과 슬라이스 중앙각 (휠 로컬 프레임, 0이 12시, 시계방향).
     const sliceCenter = seg.startAngle + seg.sliceDeg / 2;
-    // 포인터는 12시. 결과 슬라이스 중앙을 12시에 보내려면 -sliceCenter.
-    // 풀 스핀 N바퀴 + 슬라이스 내부 jitter (슬라이스가 좁으면 jitter도 좁게).
+    // 화면각 = (sliceCenter + 회전) mod 360. 슬라이스 중앙을 12시(0도)에
+    // 보내려면 최종 회전이 (-sliceCenter) mod 360 이어야 함.
+    // 현재 from에서 추가로 돌아야 할 각도 = (-sliceCenter - from) mod 360,
+    // 거기에 풀스핀 N바퀴 + 슬라이스 내부 jitter 추가.
     const fullSpins = 6 * 360;
     const jitter = (Math.random() - 0.5) * (seg.sliceDeg * 0.6);
-    const target = fullSpins - sliceCenter + jitter;
+    const from = baseRotationRef.current;
+    const mod = (n: number, m: number) => ((n % m) + m) % m;
+    const correction = mod(-sliceCenter - from, 360);
+    const target = fullSpins + correction + jitter;
 
     // 누적 회전: 이전 회전값에 더해서 항상 앞으로 돌게.
-    const next = baseRotationRef.current + target;
-    baseRotationRef.current = next;
-    setRotation(next);
+    const to = from + target;
+    baseRotationRef.current = to;
 
-    const t = setTimeout(() => {
-      onEndRef.current?.();
-    }, spinDurationMs);
+    // 매 프레임 setState로 직접 회전 구동.
+    // CSS transition / Web Animations API 둘 다 브라우저/캐시 이슈에
+    // 영향받는 케이스가 있어서 가장 단순하고 확실한 rAF 루프 사용.
+    const startTime = performance.now();
+    let rafId = 0;
+    let finished = false;
 
-    return () => clearTimeout(t);
+    // ease-out cubic (시각적으로 cubic-bezier(0.17,0.67,0.3,1)과 비슷)
+    const ease = (t: number) => 1 - Math.pow(1 - t, 3);
+
+    const tick = (now: number) => {
+      const elapsed = now - startTime;
+      const t = Math.min(1, elapsed / spinDurationMs);
+      setRotation(from + (to - from) * ease(t));
+      if (t < 1) {
+        rafId = requestAnimationFrame(tick);
+      } else {
+        finished = true;
+        onEndRef.current?.();
+      }
+    };
+
+    rafId = requestAnimationFrame(tick);
+
+    return () => {
+      if (!finished) cancelAnimationFrame(rafId);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [spinKey]);
 
@@ -127,19 +153,20 @@ export function RouletteWheel({
         }}
       />
       <div className="absolute inset-[6px] rounded-full bg-background">
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            transform: `rotate(${rotation}deg)`,
+            transformOrigin: '50% 50%',
+            willChange: 'transform',
+          }}
+        >
         <svg
           width={size - 12}
           height={size - 12}
           viewBox={`0 0 ${size} ${size}`}
-          style={{
-            transform: `rotate(${rotation}deg)`,
-            transition:
-              spinKey != null
-                ? `transform ${spinDurationMs}ms cubic-bezier(0.17, 0.67, 0.3, 1)`
-                : undefined,
-            transformOrigin: 'center',
-            display: 'block',
-          }}
+          style={{ display: 'block' }}
         >
           {segments.map((seg) => (
             <g key={seg.id}>
@@ -173,6 +200,7 @@ export function RouletteWheel({
             strokeWidth={2}
           />
         </svg>
+        </div>
       </div>
 
       {/* 12시 포인터 */}
