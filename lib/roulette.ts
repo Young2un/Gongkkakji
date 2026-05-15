@@ -3,7 +3,6 @@ export interface RouletteWheelRow {
   owner_id: string;
   slug: string;
   title: string;
-  donation_threshold: number | null;
   spin_duration_ms: number;
   show_result_ms: number;
   created_at: string;

@@ -22,7 +22,7 @@ export default async function ControlPage({
   const { data: wheel } = await supabase
     .from('roulette_wheels')
     .select(
-      'id, owner_id, slug, title, donation_threshold, spin_duration_ms, show_result_ms, created_at, updated_at'
+      'id, owner_id, slug, title, spin_duration_ms, show_result_ms, created_at, updated_at'
     )
     .eq('owner_id', user.id)
     .eq('slug', params.slug)

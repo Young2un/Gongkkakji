@@ -36,7 +36,7 @@ export default async function RouletteAdminPage() {
   const { data: wheels } = await supabase
     .from('roulette_wheels')
     .select(
-      'id, owner_id, slug, title, donation_threshold, spin_duration_ms, show_result_ms, created_at, updated_at, roulette_items(count)'
+      'id, owner_id, slug, title, spin_duration_ms, show_result_ms, created_at, updated_at, roulette_items(count)'
     )
     .eq('owner_id', user.id)
     .order('created_at', { ascending: false });

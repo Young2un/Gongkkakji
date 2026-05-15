@@ -32,7 +32,6 @@ const wheelSchema = z.object({
     .max(40)
     .regex(SLUG_PATTERN, '영문 소문자/숫자/하이픈만 사용 가능해요'),
   title: z.string().min(1, '룰렛 이름을 입력해주세요').max(60),
-  donationThreshold: z.number().int().min(0).nullable(),
   spinDurationMs: z.number().int().min(1000).max(20000),
   showResultMs: z.number().int().min(0).max(30000),
 });
@@ -40,7 +39,6 @@ const wheelSchema = z.object({
 export async function createWheel(input: {
   slug: string;
   title: string;
-  donationThreshold: number | null;
   spinDurationMs: number;
   showResultMs: number;
 }) {
@@ -58,7 +56,6 @@ export async function createWheel(input: {
       owner_id: auth.user.id,
       slug: parsed.data.slug,
       title: parsed.data.title,
-      donation_threshold: parsed.data.donationThreshold,
       spin_duration_ms: parsed.data.spinDurationMs,
       show_result_ms: parsed.data.showResultMs,
     })
@@ -80,7 +77,6 @@ export async function updateWheel(input: {
   id: string;
   slug: string;
   title: string;
-  donationThreshold: number | null;
   spinDurationMs: number;
   showResultMs: number;
 }) {
@@ -97,7 +93,6 @@ export async function updateWheel(input: {
     .update({
       slug: parsed.data.slug,
       title: parsed.data.title,
-      donation_threshold: parsed.data.donationThreshold,
       spin_duration_ms: parsed.data.spinDurationMs,
       show_result_ms: parsed.data.showResultMs,
     })

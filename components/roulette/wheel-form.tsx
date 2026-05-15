@@ -7,35 +7,28 @@ import { createWheel, updateWheel, deleteWheel } from '@/app/actions/roulette';
 import { Button } from '@/components/ui/button';
 
 interface Props {
-  open: boolean;
   onClose: () => void;
   initial?: {
     id: string;
     slug: string;
     title: string;
-    donation_threshold: number | null;
     spin_duration_ms: number;
     show_result_ms: number;
   } | null;
 }
 
-export function WheelForm({ open, onClose, initial }: Props) {
+export function WheelForm({ onClose, initial }: Props) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
   const [slug, setSlug] = useState(initial?.slug ?? '');
   const [title, setTitle] = useState(initial?.title ?? '');
-  const [donationThreshold, setDonationThreshold] = useState<string>(
-    initial?.donation_threshold != null ? String(initial.donation_threshold) : ''
-  );
   const [spinDurationMs, setSpinDurationMs] = useState(
     initial?.spin_duration_ms ?? 5000
   );
   const [showResultMs, setShowResultMs] = useState(
     initial?.show_result_ms ?? 4000
   );
-
-  if (!open) return null;
 
   const isEdit = !!initial;
 
@@ -46,19 +39,10 @@ export function WheelForm({ open, onClose, initial }: Props) {
       return;
     }
 
-    const thresholdNum = donationThreshold.trim()
-      ? Number(donationThreshold)
-      : null;
-    if (thresholdNum != null && (!Number.isFinite(thresholdNum) || thresholdNum < 0)) {
-      alert('임계금액은 0 이상의 숫자여야 해요.');
-      return;
-    }
-
     startTransition(async () => {
       const payload = {
         slug: slug.trim(),
         title: title.trim(),
-        donationThreshold: thresholdNum,
         spinDurationMs,
         showResultMs,
       };
@@ -147,20 +131,6 @@ export function WheelForm({ open, onClose, initial }: Props) {
             <span className="mt-1 block text-[11px] text-muted-foreground">
               OBS 브라우저 소스 URL: <span className="text-white/80">/overlay/{slug || 'siecham'}</span>
             </span>
-          </label>
-
-          <label className="block">
-            <span className="mb-1 block text-xs font-medium text-muted-foreground">
-              자동 트리거 임계금액 (선택)
-            </span>
-            <input
-              type="number"
-              min={0}
-              value={donationThreshold}
-              onChange={(e) => setDonationThreshold(e.target.value)}
-              placeholder="예: 5000 (원). 자동 연동은 추후 추가."
-              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-base sm:text-sm text-white placeholder:text-muted-foreground/60 focus:border-primary/50 focus:outline-none min-h-[44px] [color-scheme:dark]"
-            />
           </label>
 
           <div className="grid grid-cols-2 gap-3">

@@ -20,7 +20,7 @@ export default async function OverlayPage({
   const { data: wheel } = await supabase
     .from('roulette_wheels')
     .select(
-      'id, owner_id, slug, title, donation_threshold, spin_duration_ms, show_result_ms, created_at, updated_at'
+      'id, owner_id, slug, title, spin_duration_ms, show_result_ms, created_at, updated_at'
     )
     .eq('slug', params.slug)
     .maybeSingle<RouletteWheelRow>();

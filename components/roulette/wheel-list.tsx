@@ -37,9 +37,10 @@ export function WheelList({ wheels, appOrigin }: Props) {
             setEditing(null);
             setFormOpen(true);
           }}
+        className='px-4 '
         >
-          <Plus className="h-4 w-4" />
-          새 룰렛
+          <Plus className="h-4 w-4 " />
+        
         </Button>
       </div>
 
@@ -68,9 +69,6 @@ export function WheelList({ wheels, appOrigin }: Props) {
                   </div>
                   <p className="mt-1 text-xs text-muted-foreground">
                     항목 {w.item_count}개 · 회전 {Math.round(w.spin_duration_ms / 1000)}초
-                    {w.donation_threshold != null && (
-                      <> · 자동 임계 {w.donation_threshold.toLocaleString()}원</>
-                    )}
                   </p>
                 </div>
                 <button
@@ -109,11 +107,12 @@ export function WheelList({ wheels, appOrigin }: Props) {
         </ul>
       )}
 
-      <WheelForm
-        open={formOpen}
-        onClose={() => setFormOpen(false)}
-        initial={editing}
-      />
+      {formOpen && (
+        <WheelForm
+          onClose={() => setFormOpen(false)}
+          initial={editing}
+        />
+      )}
     </div>
   );
 }
