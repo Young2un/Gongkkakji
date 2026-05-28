@@ -33,14 +33,14 @@ const wheelSchema = z.object({
     .regex(SLUG_PATTERN, '영문 소문자/숫자/하이픈만 사용 가능해요'),
   title: z.string().min(1, '룰렛 이름을 입력해주세요').max(60),
   spinDurationMs: z.number().int().min(1000).max(20000),
-  showResultMs: z.number().int().min(0).max(30000),
+  displayMode: z.enum(['wheel', 'jackpot']).default('wheel'),
 });
 
 export async function createWheel(input: {
   slug: string;
   title: string;
   spinDurationMs: number;
-  showResultMs: number;
+  displayMode?: 'wheel' | 'jackpot';
 }) {
   const parsed = wheelSchema.safeParse(input);
   if (!parsed.success) {
@@ -57,7 +57,7 @@ export async function createWheel(input: {
       slug: parsed.data.slug,
       title: parsed.data.title,
       spin_duration_ms: parsed.data.spinDurationMs,
-      show_result_ms: parsed.data.showResultMs,
+      display_mode: parsed.data.displayMode,
     })
     .select('id, slug')
     .single();
@@ -78,7 +78,7 @@ export async function updateWheel(input: {
   slug: string;
   title: string;
   spinDurationMs: number;
-  showResultMs: number;
+  displayMode?: 'wheel' | 'jackpot';
 }) {
   const parsed = wheelSchema.safeParse(input);
   if (!parsed.success) {
@@ -94,7 +94,7 @@ export async function updateWheel(input: {
       slug: parsed.data.slug,
       title: parsed.data.title,
       spin_duration_ms: parsed.data.spinDurationMs,
-      show_result_ms: parsed.data.showResultMs,
+      display_mode: parsed.data.displayMode,
     })
     .eq('id', input.id)
     .eq('owner_id', auth.user.id);
@@ -266,4 +266,80 @@ export async function spinWheel(input: {
   if (error) return { error: '돌리기에 실패했어요' };
 
   return { success: true, spin };
+}
+
+/**
+ * 스트리머의 채널 슬러그 설정. /overlay/live/{slug} 의 {slug}.
+ * 한 번 정해두면 OBS URL이 고정됨.
+ */
+const channelSlugSchema = z.object({
+  slug: z
+    .string()
+    .min(1, '채널 슬러그를 입력해주세요')
+    .max(40)
+    .regex(SLUG_PATTERN, '영문 소문자/숫자/하이픈만 사용 가능해요'),
+});
+
+export async function setChannelSlug(input: { slug: string }) {
+  const parsed = channelSlugSchema.safeParse(input);
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? '입력값이 올바르지 않습니다' };
+  }
+
+  const auth = await requireStreamer();
+  if ('error' in auth) return { error: auth.error };
+
+  const { error } = await auth.supabase
+    .from('profiles')
+    .update({ channel_slug: parsed.data.slug })
+    .eq('id', auth.user.id);
+
+  if (error) {
+    if (error.code === '23505') {
+      return { error: '이미 사용 중인 슬러그예요' };
+    }
+    return { error: '슬러그 저장에 실패했어요' };
+  }
+
+  revalidatePath('/admin/roulette');
+  return { success: true };
+}
+
+/**
+ * 현재 OBS에 표시할 룰렛 지정. wheelId === null 이면 해제.
+ */
+const activeWheelSchema = z.object({
+  wheelId: z.string().uuid().nullable(),
+});
+
+export async function setActiveWheel(input: { wheelId: string | null }) {
+  const parsed = activeWheelSchema.safeParse(input);
+  if (!parsed.success) {
+    return { error: '입력값이 올바르지 않습니다' };
+  }
+
+  const auth = await requireStreamer();
+  if ('error' in auth) return { error: auth.error };
+
+  // 본인 소유 wheel인지 확인
+  if (parsed.data.wheelId) {
+    const { data: wheel } = await auth.supabase
+      .from('roulette_wheels')
+      .select('id, owner_id')
+      .eq('id', parsed.data.wheelId)
+      .maybeSingle();
+    if (!wheel || wheel.owner_id !== auth.user.id) {
+      return { error: '권한이 없어요' };
+    }
+  }
+
+  const { error } = await auth.supabase
+    .from('profiles')
+    .update({ active_roulette_wheel_id: parsed.data.wheelId })
+    .eq('id', auth.user.id);
+
+  if (error) return { error: '표시 룰렛 변경에 실패했어요' };
+
+  revalidatePath('/admin/roulette');
+  return { success: true };
 }

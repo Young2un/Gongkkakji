@@ -18,9 +18,13 @@ export default async function RouletteAdminPage() {
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('role')
+    .select('role, channel_slug, active_roulette_wheel_id')
     .eq('id', user.id)
-    .maybeSingle();
+    .maybeSingle<{
+      role: string;
+      channel_slug: string | null;
+      active_roulette_wheel_id: string | null;
+    }>();
 
   if (!profile || !['streamer', 'admin'].includes(profile.role)) {
     return (
@@ -36,7 +40,7 @@ export default async function RouletteAdminPage() {
   const { data: wheels } = await supabase
     .from('roulette_wheels')
     .select(
-      'id, owner_id, slug, title, spin_duration_ms, show_result_ms, created_at, updated_at, roulette_items(count)'
+      'id, owner_id, slug, title, spin_duration_ms, display_mode, created_at, updated_at, roulette_items(count)'
     )
     .eq('owner_id', user.id)
     .order('created_at', { ascending: false });
@@ -54,7 +58,12 @@ export default async function RouletteAdminPage() {
 
   return (
     <div className="mx-auto max-w-3xl pt-2">
-      <WheelList wheels={rows} appOrigin={appOrigin} />
+      <WheelList
+        wheels={rows}
+        appOrigin={appOrigin}
+        channelSlug={profile.channel_slug}
+        activeWheelId={profile.active_roulette_wheel_id}
+      />
     </div>
   );
 }

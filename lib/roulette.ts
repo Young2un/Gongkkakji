@@ -1,10 +1,12 @@
+export type RouletteDisplayMode = 'wheel' | 'jackpot';
+
 export interface RouletteWheelRow {
   id: string;
   owner_id: string;
   slug: string;
   title: string;
   spin_duration_ms: number;
-  show_result_ms: number;
+  display_mode: RouletteDisplayMode;
   created_at: string;
   updated_at: string;
 }

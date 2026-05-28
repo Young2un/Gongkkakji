@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { RouletteWheel } from '@/components/roulette/roulette-wheel';
+import { JackpotReel } from '@/components/roulette/jackpot-reel';
 import type {
   RouletteItemRow,
   RouletteSpinRow,
@@ -64,16 +65,9 @@ export function OverlayClient({ wheel, initialItems }: Props) {
     };
   }, [wheel.id]);
 
-  // 결과 표시 자동 숨김
-  useEffect(() => {
-    if (phase !== 'result') return;
-    if (!wheel.show_result_ms || wheel.show_result_ms <= 0) return;
-    const t = setTimeout(() => {
-      setPhase('idle');
-      setCurrentSpin(null);
-    }, wheel.show_result_ms);
-    return () => clearTimeout(t);
-  }, [phase, wheel.show_result_ms]);
+  // 결과는 다음 회전이 시작될 때까지 계속 노출.
+  // 새 spin INSERT가 도착하면 phase='spinning' + currentSpin이 갈아끼워지면서
+  // 자동으로 이전 결과가 새 결과로 교체됨.
 
   const resultItem =
     currentSpin?.result_item_id != null
@@ -83,17 +77,31 @@ export function OverlayClient({ wheel, initialItems }: Props) {
   return (
     <div className="flex min-h-screen items-center justify-center p-6">
       <div className="relative flex flex-col items-center gap-6">
-        <RouletteWheel
-          items={items}
-          spinKey={
-            phase === 'spinning' && currentSpin ? currentSpin.id : null
-          }
-          resultItemId={currentSpin?.result_item_id ?? null}
-          spinDurationMs={wheel.spin_duration_ms}
-          size={520}
-          overlay
-          onSpinEnd={() => setPhase('result')}
-        />
+        {wheel.display_mode === 'jackpot' ? (
+          <JackpotReel
+            items={items}
+            spinKey={
+              phase === 'spinning' && currentSpin ? currentSpin.id : null
+            }
+            resultItemId={currentSpin?.result_item_id ?? null}
+            spinDurationMs={wheel.spin_duration_ms}
+            size={520}
+            overlay
+            onSpinEnd={() => setPhase('result')}
+          />
+        ) : (
+          <RouletteWheel
+            items={items}
+            spinKey={
+              phase === 'spinning' && currentSpin ? currentSpin.id : null
+            }
+            resultItemId={currentSpin?.result_item_id ?? null}
+            spinDurationMs={wheel.spin_duration_ms}
+            size={520}
+            overlay
+            onSpinEnd={() => setPhase('result')}
+          />
+        )}
 
         {phase === 'result' && resultItem && (
           <div

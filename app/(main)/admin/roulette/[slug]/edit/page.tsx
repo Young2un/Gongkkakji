@@ -25,7 +25,7 @@ export default async function RouletteEditPage({
   const { data: wheel } = await supabase
     .from('roulette_wheels')
     .select(
-      'id, owner_id, slug, title, spin_duration_ms, show_result_ms, created_at, updated_at'
+      'id, owner_id, slug, title, spin_duration_ms, display_mode, created_at, updated_at'
     )
     .eq('owner_id', user.id)
     .eq('slug', params.slug)
@@ -67,7 +67,7 @@ export default async function RouletteEditPage({
 
       <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-[280px_1fr]">
         <div className="flex justify-center md:block">
-          <WheelPreview items={rows} />
+          <WheelPreview items={rows} displayMode={wheel.display_mode} />
         </div>
         <ItemEditor wheelId={wheel.id} initialItems={rows} />
       </div>

@@ -13,7 +13,7 @@ interface Props {
     slug: string;
     title: string;
     spin_duration_ms: number;
-    show_result_ms: number;
+    display_mode?: 'wheel' | 'jackpot';
   } | null;
 }
 
@@ -26,8 +26,8 @@ export function WheelForm({ onClose, initial }: Props) {
   const [spinDurationMs, setSpinDurationMs] = useState(
     initial?.spin_duration_ms ?? 5000
   );
-  const [showResultMs, setShowResultMs] = useState(
-    initial?.show_result_ms ?? 4000
+  const [displayMode, setDisplayMode] = useState<'wheel' | 'jackpot'>(
+    initial?.display_mode ?? 'wheel'
   );
 
   const isEdit = !!initial;
@@ -44,7 +44,7 @@ export function WheelForm({ onClose, initial }: Props) {
         slug: slug.trim(),
         title: title.trim(),
         spinDurationMs,
-        showResultMs,
+        displayMode,
       };
 
       const res = isEdit
@@ -133,36 +133,49 @@ export function WheelForm({ onClose, initial }: Props) {
             </span>
           </label>
 
-          <div className="grid grid-cols-2 gap-3">
-            <label className="block">
-              <span className="mb-1 block text-xs font-medium text-muted-foreground">
-                회전 시간 (ms)
-              </span>
-              <input
-                type="number"
-                min={1000}
-                max={20000}
-                step={500}
-                value={spinDurationMs}
-                onChange={(e) => setSpinDurationMs(Number(e.target.value))}
-                className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-base sm:text-sm text-white focus:border-primary/50 focus:outline-none min-h-[44px] [color-scheme:dark]"
-              />
-            </label>
-            <label className="block">
-              <span className="mb-1 block text-xs font-medium text-muted-foreground">
-                결과 표시 (ms)
-              </span>
-              <input
-                type="number"
-                min={0}
-                max={30000}
-                step={500}
-                value={showResultMs}
-                onChange={(e) => setShowResultMs(Number(e.target.value))}
-                className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-base sm:text-sm text-white focus:border-primary/50 focus:outline-none min-h-[44px] [color-scheme:dark]"
-              />
-            </label>
+          <div>
+            <span className="mb-1.5 block text-xs font-medium text-muted-foreground">
+              표시 방식
+            </span>
+            <div className="grid grid-cols-2 gap-2">
+              {([
+                { value: 'wheel', label: '돌림판', desc: '원형 회전' },
+                { value: 'jackpot', label: '잭팟', desc: '슬롯 1열' },
+              ] as const).map((opt) => {
+                const active = displayMode === opt.value;
+                return (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    onClick={() => setDisplayMode(opt.value)}
+                    className={`rounded-lg border px-3 py-2.5 text-left transition ${
+                      active
+                        ? 'border-accent bg-accent/10 text-white'
+                        : 'border-white/10 bg-white/5 text-muted-foreground hover:bg-white/10'
+                    }`}
+                  >
+                    <div className="text-sm font-semibold">{opt.label}</div>
+                    <div className="text-[11px] opacity-80">{opt.desc}</div>
+                  </button>
+                );
+              })}
+            </div>
           </div>
+
+          <label className="block">
+            <span className="mb-1 block text-xs font-medium text-muted-foreground">
+              회전 시간 (ms)
+            </span>
+            <input
+              type="number"
+              min={1000}
+              max={20000}
+              step={500}
+              value={spinDurationMs}
+              onChange={(e) => setSpinDurationMs(Number(e.target.value))}
+              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-base sm:text-sm text-white focus:border-primary/50 focus:outline-none min-h-[44px] [color-scheme:dark]"
+            />
+          </label>
 
           <div className="flex items-center justify-between gap-2 pt-2">
             {isEdit ? (
