@@ -8,6 +8,7 @@ import { createClient } from '@/lib/supabase/client';
 import { createStory } from '@/app/actions/story';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { StoryEditor } from './story-editor';
 
 const MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10MB
 const MAX_VIDEO_SIZE = 50 * 1024 * 1024; // 50MB
@@ -130,18 +131,34 @@ function UploaderModal({
     setMediaType(isImage ? 'image' : 'video');
   };
 
-  const handleSubmit = async () => {
-    if (!file || !mediaType) return;
+  const resetFile = () => {
+    setFile(null);
+    setMediaType(null);
+    setPreview(null);
+    setCaption('');
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  // 실제 업로드 (이미지: 에디터가 합성한 blob / 비디오: 원본 file)
+  const doUpload = async (
+    data: Blob | File,
+    type: 'image' | 'video',
+    cap: string
+  ) => {
     setError(null);
     setUploading(true);
 
     try {
-      const ext = file.name.split('.').pop()?.toLowerCase() || 'bin';
+      const ext = type === 'image' ? 'jpg' : 'mp4';
       const path = `${userId}/${crypto.randomUUID()}.${ext}`;
 
       const { error: upErr } = await supabase.storage
         .from('stories')
-        .upload(path, file, { cacheControl: '3600', upsert: false });
+        .upload(path, data, {
+          cacheControl: '3600',
+          upsert: false,
+          contentType: type === 'image' ? 'image/jpeg' : (data as File).type,
+        });
       if (upErr) {
         setError(`업로드 실패: ${upErr.message}`);
         setUploading(false);
@@ -153,8 +170,8 @@ function UploaderModal({
       startTransition(async () => {
         const res = await createStory({
           mediaUrl: pub.publicUrl,
-          mediaType,
-          caption,
+          mediaType: type,
+          caption: cap,
         });
         if ('error' in res && res.error) {
           setError(res.error);
@@ -175,6 +192,29 @@ function UploaderModal({
 
   if (!mounted) return null;
 
+  // ── 이미지: 인스타형 에디터 전체화면 ──
+  if (file && mediaType === 'image') {
+    return createPortal(
+      <div className="fixed inset-0 z-50 flex flex-col bg-black p-3">
+        <div className="mx-auto flex h-full w-full max-w-md flex-col">
+          <StoryEditor
+            file={file}
+            exporting={busy}
+            onCancel={() => (busy ? undefined : resetFile())}
+            onExport={(blob) => doUpload(blob, 'image', '')}
+          />
+          {error && (
+            <div className="mt-2 rounded-md border border-live/50 bg-live/10 p-2 text-center text-sm text-live">
+              {error}
+            </div>
+          )}
+        </div>
+      </div>,
+      document.body
+    );
+  }
+
+  // ── 그 외(선택 화면 / 비디오): 기존 카드 모달 ──
   return createPortal(
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 p-4 backdrop-blur-sm"
@@ -219,20 +259,12 @@ function UploaderModal({
               이미지 또는 비디오 선택
             </div>
             <div className="text-xs text-muted-foreground">
-              이미지 10MB · 비디오 50MB 이하
+              이미지는 꾸미기 · 비디오 50MB 이하
             </div>
           </button>
         ) : (
           <div className="relative overflow-hidden rounded-lg border border-border bg-black">
-            {mediaType === 'image' && preview && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={preview}
-                alt=""
-                className="mx-auto max-h-[60vh] w-auto object-contain"
-              />
-            )}
-            {mediaType === 'video' && preview && (
+            {preview && (
               <video
                 src={preview}
                 controls
@@ -241,12 +273,7 @@ function UploaderModal({
             )}
             <button
               type="button"
-              onClick={() => {
-                setFile(null);
-                setMediaType(null);
-                setPreview(null);
-                if (fileInputRef.current) fileInputRef.current.value = '';
-              }}
+              onClick={resetFile}
               disabled={busy}
               className={cn(
                 'absolute right-2 top-2 rounded-full bg-foreground/70 p-1.5 text-background hover:bg-foreground',
@@ -259,14 +286,16 @@ function UploaderModal({
           </div>
         )}
 
-        <textarea
-          value={caption}
-          onChange={(e) => setCaption(e.target.value)}
-          rows={2}
-          maxLength={200}
-          placeholder="캡션을 입력하세요 (선택)"
-          className="w-full resize-none rounded-md border border-border bg-background px-3 py-2 text-sm focus:border-foreground focus:outline-none"
-        />
+        {file && (
+          <textarea
+            value={caption}
+            onChange={(e) => setCaption(e.target.value)}
+            rows={2}
+            maxLength={200}
+            placeholder="캡션을 입력하세요 (선택)"
+            className="w-full resize-none rounded-md border border-border bg-background px-3 py-2 text-sm focus:border-foreground focus:outline-none"
+          />
+        )}
 
         {error && (
           <div className="rounded-md border border-live/50 bg-live/10 p-3 text-sm text-live">
@@ -278,7 +307,10 @@ function UploaderModal({
           <Button variant="ghost" onClick={onClose} disabled={busy}>
             취소
           </Button>
-          <Button onClick={handleSubmit} disabled={!file || busy}>
+          <Button
+            onClick={() => file && mediaType && doUpload(file, mediaType, caption)}
+            disabled={!file || busy}
+          >
             {busy && <Loader2 className="h-4 w-4 animate-spin" />}
             올리기
           </Button>

@@ -3,9 +3,14 @@
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
-import { Bookmark, Eye, Trash2, X } from 'lucide-react';
-import { markStoryViewed, deleteStory } from '@/app/actions/story';
-import { timeAgo } from '@/lib/utils';
+import { Bookmark, Eye, Loader2, Send, Trash2, X } from 'lucide-react';
+import {
+  markStoryViewed,
+  deleteStory,
+  sendStoryReply,
+  reactToStory,
+} from '@/app/actions/story';
+import { cn, timeAgo } from '@/lib/utils';
 import {
   HighlightSaveModal,
   type ExistingHighlight,
@@ -31,12 +36,15 @@ export interface StoryAuthor {
   role: string | null;
 }
 
+const QUICK_REACTIONS = ['❤️', '😂', '😮', '😍', '🔥', '👏'];
+
 interface Props {
   author: StoryAuthor;
   stories: StoryViewerItem[];
   startIndex: number;
   isOwner: boolean;
   isStreamer: boolean;
+  canReply: boolean;
   existingHighlights: ExistingHighlight[];
 }
 
@@ -46,12 +54,18 @@ export function StoryViewer({
   startIndex,
   isOwner,
   isStreamer,
+  canReply,
   existingHighlights,
 }: Props) {
   const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(startIndex);
   const [highlightOpen, setHighlightOpen] = useState(false);
   const [viewersOpen, setViewersOpen] = useState(false);
+  const [paused, setPaused] = useState(false);
+  const [reply, setReply] = useState('');
+  const [sending, setSending] = useState(false);
+  const [flash, setFlash] = useState<string | null>(null);
+  const [sentReaction, setSentReaction] = useState<string | null>(null);
 
   const currentStory = stories[currentIndex];
 
@@ -73,8 +87,40 @@ export function StoryViewer({
     const story = stories[id];
     if (!story) return;
     setCurrentIndex(id);
+    setSentReaction(null);
+    setReply('');
     if (!isOwner) {
       markStoryViewed(story.id).catch(() => {});
+    }
+  };
+
+  const showFlash = (msg: string) => {
+    setFlash(msg);
+    setTimeout(() => setFlash(null), 1500);
+  };
+
+  const handleReact = async (emoji: string) => {
+    setSentReaction(emoji);
+    const res = await reactToStory({ storyId: currentStory.id, emoji });
+    if ('error' in res && res.error) {
+      setSentReaction(null);
+      showFlash(res.error);
+    } else {
+      showFlash(`${emoji} 반응을 보냈어요`);
+    }
+  };
+
+  const handleSendReply = async () => {
+    const body = reply.trim();
+    if (!body || sending) return;
+    setSending(true);
+    const res = await sendStoryReply({ storyId: currentStory.id, body });
+    setSending(false);
+    if ('error' in res && res.error) {
+      showFlash(res.error);
+    } else {
+      setReply('');
+      showFlash('답장을 보냈어요');
     }
   };
 
@@ -141,6 +187,7 @@ export function StoryViewer({
           width="100%"
           height="100%"
           currentIndex={startIndex}
+          isPaused={paused}
           keyboardNavigation
           onStoryStart={handleStoryStart}
           onAllStoriesEnd={handleAllEnd}
@@ -153,10 +200,78 @@ export function StoryViewer({
 
       {/* 캡션 */}
       {currentStory.caption && (
-        <div className="pointer-events-none absolute inset-x-0 bottom-16 z-10 px-6 text-center">
+        <div
+          className={cn(
+            'pointer-events-none absolute inset-x-0 z-10 px-6 text-center',
+            !isOwner && canReply ? 'bottom-28' : 'bottom-16'
+          )}
+        >
           <p className="inline-block rounded-md bg-black/50 px-3 py-1.5 text-sm text-white">
             {currentStory.caption}
           </p>
+        </div>
+      )}
+
+      {/* 알림 토스트 */}
+      {flash && (
+        <div className="pointer-events-none absolute inset-x-0 bottom-1/2 z-30 flex justify-center">
+          <span className="rounded-full bg-black/70 px-4 py-2 text-sm text-white">
+            {flash}
+          </span>
+        </div>
+      )}
+
+      {/* 하단 답장/반응 (비소유자 · 로그인 시) */}
+      {!isOwner && canReply && (
+        <div className="absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-black/70 to-transparent p-4">
+          <div className="mx-auto w-full max-w-md space-y-3">
+            <div className="flex items-center justify-center gap-2">
+              {QUICK_REACTIONS.map((emoji) => (
+                <button
+                  key={emoji}
+                  type="button"
+                  onClick={() => handleReact(emoji)}
+                  className={cn(
+                    'text-2xl transition-transform hover:scale-125',
+                    sentReaction === emoji && 'scale-125'
+                  )}
+                  aria-label={`${emoji} 반응`}
+                >
+                  {emoji}
+                </button>
+              ))}
+            </div>
+            <div className="flex items-center gap-2">
+              <input
+                value={reply}
+                onChange={(e) => setReply(e.target.value)}
+                onFocus={() => setPaused(true)}
+                onBlur={() => setPaused(false)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleSendReply();
+                  }
+                }}
+                maxLength={500}
+                placeholder="메시지 보내기..."
+                className="flex-1 rounded-full border border-white/30 bg-white/10 px-4 py-2 text-sm text-white placeholder:text-white/50 focus:border-white/60 focus:outline-none"
+              />
+              <button
+                type="button"
+                onClick={handleSendReply}
+                disabled={!reply.trim() || sending}
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/15 text-white hover:bg-white/25 disabled:opacity-40"
+                aria-label="답장 보내기"
+              >
+                {sending ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Send className="h-4 w-4" />
+                )}
+              </button>
+            </div>
+          </div>
         </div>
       )}
 

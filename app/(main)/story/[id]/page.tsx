@@ -121,6 +121,7 @@ export default async function StoryPage({
       startIndex={startIndex}
       isOwner={isOwner}
       isStreamer={isStreamer}
+      canReply={!!user && !isOwner}
       existingHighlights={existingHighlights}
     />
   );

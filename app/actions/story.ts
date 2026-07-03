@@ -118,6 +118,74 @@ export async function saveStoryAsHighlight(input: {
   return { data: { highlightId } };
 }
 
+export async function sendStoryReply(input: {
+  storyId: string;
+  body: string;
+}) {
+  const body = input.body?.trim();
+  if (!body) return { error: '내용을 입력해주세요' };
+  if (body.length > 500) return { error: '500자 이하로 입력해주세요' };
+
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: '로그인이 필요합니다' };
+
+  // 본인 스토리엔 답장 안 남김
+  const { data: story } = await supabase
+    .from('stories')
+    .select('author_id')
+    .eq('id', input.storyId)
+    .maybeSingle();
+  if (!story) return { error: '스토리를 찾을 수 없어요' };
+  if (story.author_id === user.id)
+    return { error: '본인 스토리에는 답장할 수 없어요' };
+
+  const { error } = await supabase.from('story_replies').insert({
+    story_id: input.storyId,
+    sender_id: user.id,
+    body,
+  });
+  if (error) return { error: '답장 전송에 실패했어요' };
+
+  return { ok: true };
+}
+
+export async function reactToStory(input: {
+  storyId: string;
+  emoji: string;
+}) {
+  const emoji = input.emoji?.trim();
+  if (!emoji || emoji.length > 8) return { error: '올바르지 않은 반응이에요' };
+
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: '로그인이 필요합니다' };
+
+  const { data: story } = await supabase
+    .from('stories')
+    .select('author_id')
+    .eq('id', input.storyId)
+    .maybeSingle();
+  if (!story) return { error: '스토리를 찾을 수 없어요' };
+  if (story.author_id === user.id)
+    return { error: '본인 스토리에는 반응할 수 없어요' };
+
+  // 스토리당 1개 반응 — 업서트
+  const { error } = await supabase
+    .from('story_reactions')
+    .upsert(
+      { story_id: input.storyId, sender_id: user.id, emoji },
+      { onConflict: 'story_id,sender_id' }
+    );
+  if (error) return { error: '반응 전송에 실패했어요' };
+
+  return { ok: true };
+}
+
 export async function deleteStory(storyId: string) {
   const supabase = createClient();
   const {
