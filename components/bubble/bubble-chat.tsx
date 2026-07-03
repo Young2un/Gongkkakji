@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useTransition } from 'react';
 import { Send, Loader2, User } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { sendBubbleMessage } from '@/app/actions/bubble';
-import { cn } from '@/lib/utils';
+import { cn, formatDateTime } from '@/lib/utils';
 
 export interface BubbleMessage {
   id: string;
@@ -159,12 +159,9 @@ export function BubbleChat({ initialMessages, currentUserId, currentUserRole }: 
                       {msg.content}
                     </div>
                     
-                    {/* 시간 */}
+                    {/* 날짜 + 시간 */}
                     <span className="text-[10px] text-muted-foreground/60 px-1">
-                      {new Date(msg.created_at).toLocaleTimeString('ko-KR', {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                      })}
+                      {formatDateTime(msg.created_at)}
                     </span>
                   </div>
                 </div>
