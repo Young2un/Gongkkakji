@@ -22,7 +22,7 @@ export default async function PostDetailPage({
   const { data: post } = await supabase
     .from('posts')
     .select(
-      'id, title, content, media_urls, view_count, created_at, author_id, category:categories(slug, name), author:profiles(id, username, display_name, avatar_url, role)'
+      'id, title, content, media_urls, view_count, created_at, author_id, category:categories(slug, name, is_anonymous), author:profiles(id, username, display_name, avatar_url, role)'
     )
     .eq('id', params.postId)
     .maybeSingle();
@@ -30,10 +30,21 @@ export default async function PostDetailPage({
   if (!post) notFound();
 
   const category = Array.isArray(post.category) ? post.category[0] : post.category;
-  const author = Array.isArray(post.author) ? post.author[0] : post.author;
+  const rawAuthor = Array.isArray(post.author) ? post.author[0] : post.author;
 
   // URL의 slug와 실제 카테고리 slug 불일치 시 notFound
   if (category?.slug !== params.slug) notFound();
+
+  const isAnonymous = !!category?.is_anonymous;
+  const author = isAnonymous
+    ? {
+        id: post.author_id,
+        username: null,
+        display_name: '글쓴이',
+        avatar_url: null,
+        role: null,
+      }
+    : rawAuthor;
 
   const {
     data: { user },
@@ -173,7 +184,9 @@ export default async function PostDetailPage({
 
       <CommentSection
         postId={post.id}
+        postAuthorId={post.author_id}
         categorySlug={category.slug}
+        isAnonymous={isAnonymous}
         comments={comments}
         currentUser={currentUserProfile}
       />

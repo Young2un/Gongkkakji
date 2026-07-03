@@ -42,9 +42,10 @@ export default async function PublicProfilePage({
     supabase
       .from('posts')
       .select(
-        'id, title, created_at, category:categories(slug, name)'
+        'id, title, created_at, category:categories!inner(slug, name, is_anonymous)'
       )
       .eq('author_id', profile.id)
+      .eq('categories.is_anonymous', false)
       .order('created_at', { ascending: false })
       .limit(RECENT_POST_LIMIT),
     isStreamer

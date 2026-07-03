@@ -1,6 +1,6 @@
 'use client';
 
-import { useOptimistic, useRef, useState, useTransition } from 'react';
+import { useMemo, useOptimistic, useRef, useState, useTransition } from 'react';
 import Link from 'next/link';
 import { CornerDownRight, Send } from 'lucide-react';
 import { createComment } from '@/app/actions/board';
@@ -27,7 +27,10 @@ export interface CommentItem {
 
 interface CommentSectionProps {
   postId: string;
+  postAuthorId: string;
   categorySlug: string;
+  /** true면 글 작성자는 '글쓴이', 다른 댓글러는 등장 순서대로 '익명1/2/...' */
+  isAnonymous?: boolean;
   comments: CommentItem[];
   currentUser:
     | {
@@ -40,9 +43,45 @@ interface CommentSectionProps {
     | null;
 }
 
+/**
+ * 익명 카테고리에서 댓글러 식별 라벨 매핑.
+ * 글 작성자 = '글쓴이', 그 외는 최초 댓글 시간순으로 '익명1', '익명2', ...
+ * 같은 author_id는 항상 같은 라벨.
+ */
+function computeAnonLabels(
+  comments: CommentItem[],
+  postAuthorId: string
+): Record<string, string> {
+  const labels: Record<string, string> = {};
+  labels[postAuthorId] = '글쓴이';
+  let counter = 0;
+  for (const c of comments) {
+    const aid = c.author?.id;
+    if (!aid || labels[aid]) continue;
+    counter += 1;
+    labels[aid] = `익명${counter}`;
+  }
+  return labels;
+}
+
+function anonymizeAuthor(
+  author: CommentAuthor | null,
+  label: string
+): CommentAuthor {
+  return {
+    id: author?.id ?? '',
+    username: null,
+    display_name: label,
+    avatar_url: null,
+    role: null,
+  };
+}
+
 export function CommentSection({
   postId,
+  postAuthorId,
   categorySlug,
+  isAnonymous = false,
   comments: initialComments,
   currentUser,
 }: CommentSectionProps) {
@@ -62,6 +101,18 @@ export function CommentSection({
       return state;
     }
   );
+
+  const anonLabels = useMemo(
+    () => (isAnonymous ? computeAnonLabels(optimistic, postAuthorId) : {}),
+    [isAnonymous, optimistic, postAuthorId]
+  );
+
+  const renderAuthor = (author: CommentAuthor | null): CommentAuthor | null => {
+    if (!isAnonymous) return author;
+    const aid = author?.id ?? '';
+    const label = anonLabels[aid] ?? '익명';
+    return anonymizeAuthor(author, label);
+  };
 
   // 부모-자식 구조로 정렬
   const roots = optimistic.filter((c) => !c.parent_id);
@@ -100,13 +151,16 @@ export function CommentSection({
         )}
         {roots.map((c) => (
           <li key={c.id} className="space-y-3">
-            <CommentBubble comment={c} />
+            <CommentBubble comment={c} displayAuthor={renderAuthor(c.author)} />
             <div className="space-y-3 pl-6">
               {childrenOf(c.id).map((child) => (
                 <div key={child.id} className="flex gap-2">
                   <CornerDownRight className="mt-2 h-4 w-4 shrink-0 text-muted-foreground" />
                   <div className="flex-1">
-                    <CommentBubble comment={child} />
+                    <CommentBubble
+                      comment={child}
+                      displayAuthor={renderAuthor(child.author)}
+                    />
                   </div>
                 </div>
               ))}
@@ -127,7 +181,13 @@ export function CommentSection({
   );
 }
 
-function CommentBubble({ comment }: { comment: CommentItem }) {
+function CommentBubble({
+  comment,
+  displayAuthor,
+}: {
+  comment: CommentItem;
+  displayAuthor: CommentAuthor | null;
+}) {
   return (
     <div
       className={cn(
@@ -136,7 +196,7 @@ function CommentBubble({ comment }: { comment: CommentItem }) {
       )}
     >
       <div className="flex items-center justify-between">
-        <AuthorBadge author={comment.author} />
+        <AuthorBadge author={displayAuthor} />
         <span className="text-xs text-muted-foreground">
           {timeAgo(comment.created_at)}
         </span>

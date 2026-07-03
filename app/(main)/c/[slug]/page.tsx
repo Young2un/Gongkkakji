@@ -22,11 +22,13 @@ export default async function CategoryListPage({
 
   const { data: category } = await supabase
     .from('categories')
-    .select('id, slug, name, description, streamer_only')
+    .select('id, slug, name, description, streamer_only, is_anonymous')
     .eq('slug', params.slug)
     .maybeSingle();
 
   if (!category) notFound();
+
+  const isAnonymous = !!category.is_anonymous;
 
   const from = (page - 1) * PAGE_SIZE;
   const to = from + PAGE_SIZE - 1;
@@ -104,8 +106,10 @@ export default async function CategoryListPage({
                     <p className="font-medium">{post.title}</p>
                     <div className="flex items-center gap-3 text-xs text-muted-foreground">
                       <span>
-                        {author?.display_name ?? author?.username}
-                        {author?.role === 'streamer' && (
+                        {isAnonymous
+                          ? '익명'
+                          : author?.display_name ?? author?.username}
+                        {!isAnonymous && author?.role === 'streamer' && (
                           <span className="ml-1 text-accent">· 스트리머</span>
                         )}
                       </span>

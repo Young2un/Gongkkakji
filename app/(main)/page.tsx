@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { timeAgo } from '@/lib/utils';
-import { Play, MessageSquare, Video, ArrowRight, Star, ExternalLink, Megaphone } from 'lucide-react';
+import { Play, MessageSquare, ArrowRight, Megaphone, VenetianMask } from 'lucide-react';
 import { getStreamerLive } from '@/lib/chzzk';
 import { UpcomingEvents } from '@/components/calendar/upcoming-events';
 import type { EventRow } from '@/lib/events';
@@ -19,13 +19,13 @@ export default async function HomePage() {
     .limit(1);
   const latestNotice = notices?.[0];
 
-  // 최신 클립 2개
-  const { data: clips } = await supabase
+  // 최신 익명글 3개 (작성자는 표시 안 함)
+  const { data: anonPosts } = await supabase
     .from('posts')
-    .select('id, title, created_at, media_urls, author:profiles(display_name, username, avatar_url), category:categories!inner(slug)')
-    .eq('categories.slug', 'clips')
+    .select('id, title, created_at, category:categories!inner(slug)')
+    .eq('categories.slug', 'anon')
     .order('created_at', { ascending: false })
-    .limit(2);
+    .limit(3);
 
   // 다가오는 일정
   const { data: events } = await supabase
@@ -182,32 +182,36 @@ export default async function HomePage() {
           </div>
         </div>
 
-        {/* 최근 클립 (Span 1) */}
+        {/* 최근 익명글 (Span 1) */}
         <div className="rounded-2xl border border-white/5 bg-card/40 backdrop-blur-md p-4 sm:p-6 flex flex-col">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2 text-accent font-bold">
-              <Video className="h-5 w-5" />
-              <h2>인기 클립</h2>
+              <VenetianMask className="h-5 w-5" />
+              <h2>익명게시판</h2>
             </div>
-            <Link href="/c/clips" className="text-xs text-muted-foreground hover:text-white flex items-center gap-1">
+            <Link href="/c/anon" className="text-xs text-muted-foreground hover:text-white flex items-center gap-1">
               더보기 <ArrowRight className="h-3 w-3" />
             </Link>
           </div>
-          <div className="flex-1 flex flex-col gap-3">
-            {clips && clips.length > 0 ? (
-              clips.map((clip) => (
-                <Link key={clip.id} href={`/c/clips/${clip.id}`} className="group relative flex-1 rounded-xl overflow-hidden bg-black/50 border border-white/5">
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/40 transition-colors z-10">
-                    <Play className="h-8 w-8 text-white opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all" />
-                  </div>
-                  <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/90 to-transparent z-20">
-                    <p className="text-sm font-bold text-white line-clamp-1">{clip.title}</p>
-                  </div>
+          <div className="flex-1 flex flex-col gap-2">
+            {anonPosts && anonPosts.length > 0 ? (
+              anonPosts.map((post) => (
+                <Link
+                  key={post.id}
+                  href={`/c/anon/${post.id}`}
+                  className="group flex items-center justify-between gap-2 rounded-xl bg-white/5 border border-white/5 px-3 py-2.5 hover:bg-white/10 hover:border-accent/30 transition-all"
+                >
+                  <p className="text-sm font-medium text-white/90 group-hover:text-accent transition-colors line-clamp-1 flex-1">
+                    {post.title}
+                  </p>
+                  <span className="text-[10px] text-muted-foreground/70 shrink-0">
+                    {timeAgo(post.created_at)}
+                  </span>
                 </Link>
               ))
             ) : (
               <div className="flex-1 flex items-center justify-center rounded-xl bg-white/5 border border-white/5 text-sm text-muted-foreground">
-                아직 클립이 없어요.
+                아직 익명글이 없어요.
               </div>
             )}
           </div>

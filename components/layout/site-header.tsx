@@ -54,10 +54,10 @@ export async function SiteHeader() {
             자유
           </Link>
           <Link
-            href="/c/clips"
+            href="/c/anon"
             className="rounded-md px-3 py-2 text-sm text-foreground/70 transition-all hover:bg-white/5 hover:text-white font-medium"
           >
-            클립
+            익명
           </Link>
           <Link
             href="/calendar"
