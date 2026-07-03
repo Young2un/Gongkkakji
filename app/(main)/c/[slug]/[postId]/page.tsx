@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ChevronLeft, Eye } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
-import { timeAgo } from '@/lib/utils';
+import { formatDateTime } from '@/lib/utils';
 import { AuthorBadge } from '@/components/board/author-badge';
 import { LikeButton } from '@/components/board/like-button';
 import {
@@ -142,7 +142,7 @@ export default async function PostDetailPage({
         <div className="flex items-center justify-between">
           <AuthorBadge author={author} size="md" />
           <div className="flex items-center gap-3 text-xs text-muted-foreground">
-            <span>{timeAgo(post.created_at)}</span>
+            <span>{formatDateTime(post.created_at)}</span>
             <span className="inline-flex items-center gap-1">
               <Eye className="h-3.5 w-3.5" />
               {post.view_count}

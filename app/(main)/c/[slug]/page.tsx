@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { MessageCircle, PencilLine, Pin } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
-import { timeAgo } from '@/lib/utils';
+import { formatDateTime } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Pagination } from '@/components/board/pagination';
 
@@ -113,7 +113,7 @@ export default async function CategoryListPage({
                           <span className="ml-1 text-accent">· 스트리머</span>
                         )}
                       </span>
-                      <span>{timeAgo(post.created_at)}</span>
+                      <span>{formatDateTime(post.created_at)}</span>
                       <span className="inline-flex items-center gap-1">
                         <MessageCircle className="h-3.5 w-3.5" />
                         {commentCounts[post.id] ?? 0}

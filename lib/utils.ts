@@ -29,6 +29,19 @@ export function timeAgo(date: string | Date): string {
 }
 
 /**
+ * 전체 날짜 + 시간 포맷 (2026. 7. 2. 오후 3:24)
+ */
+export function formatDateTime(date: string | Date): string {
+  return new Date(date).toLocaleString('ko-KR', {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+  });
+}
+
+/**
  * 숫자 축약 (1.2K, 3.4M)
  */
 export function formatCount(n: number): string {

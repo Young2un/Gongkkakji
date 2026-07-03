@@ -6,7 +6,7 @@ import { CornerDownRight, Send } from 'lucide-react';
 import { createComment } from '@/app/actions/board';
 import { AuthorBadge } from './author-badge';
 import { Button } from '@/components/ui/button';
-import { timeAgo, cn } from '@/lib/utils';
+import { formatDateTime, cn } from '@/lib/utils';
 
 export interface CommentAuthor {
   id: string;
@@ -198,7 +198,7 @@ function CommentBubble({
       <div className="flex items-center justify-between">
         <AuthorBadge author={displayAuthor} />
         <span className="text-xs text-muted-foreground">
-          {timeAgo(comment.created_at)}
+          {formatDateTime(comment.created_at)}
         </span>
       </div>
       <p className="whitespace-pre-wrap break-words pl-9 text-sm">
