@@ -22,6 +22,7 @@ export function timeAgo(date: string | Date): string {
   if (diff < 604800) return `${Math.floor(diff / 86400)}일 전`;
 
   return new Date(date).toLocaleDateString('ko-KR', {
+    timeZone: 'Asia/Seoul',
     year: 'numeric',
     month: 'short',
     day: 'numeric',
@@ -33,6 +34,8 @@ export function timeAgo(date: string | Date): string {
  */
 export function formatDateTime(date: string | Date): string {
   return new Date(date).toLocaleString('ko-KR', {
+    // 서버(UTC)/클라 어디서 렌더돼도 항상 한국시간으로 고정
+    timeZone: 'Asia/Seoul',
     year: 'numeric',
     month: 'numeric',
     day: 'numeric',
