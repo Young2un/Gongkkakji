@@ -86,6 +86,15 @@ export async function GET(req: NextRequest) {
         // CHZZK_CLIENT_SECRET이 바뀌어도 로그인이 끊기지 않도록
         // 매 로그인마다 현재 secret 기준 password로 동기화
         await supabase.auth.admin.updateUserById(userId, { password });
+        // 치지직에서 닉네임/프로필 이미지를 바꿨다면 매 로그인마다 반영
+        await supabase
+          .from('profiles')
+          .update({
+            username: chzzkUser.channelName,
+            display_name: chzzkUser.channelName,
+            avatar_url: chzzkUser.profileImageUrl,
+          })
+          .eq('id', userId);
       } else {
         // orphan profile → 정리 후 신규 생성
         await supabase.from('profiles').delete().eq('id', existing.id);

@@ -16,7 +16,7 @@ function clientHeaders() {
 /**
  * 특정 채널의 라이브 상태 조회
  * - Client 인증만 필요 (유저 토큰 불필요)
- * - Next.js 캐시 활용 (1분)
+ * - Next.js 캐시 활용 (30초)
  * - 방송 중이 아니면 null 반환
  */
 export async function getLiveStatus(
@@ -27,7 +27,7 @@ export async function getLiveStatus(
       `${OPEN_API}/open/v1/lives?channelIds=${channelId}`,
       {
         headers: clientHeaders(),
-        next: { revalidate: 60, tags: [`live:${channelId}`] },
+        next: { revalidate: 30, tags: [`live:${channelId}`] },
       }
     );
 

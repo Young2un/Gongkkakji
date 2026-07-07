@@ -3,7 +3,7 @@ import { getStreamerLive } from '@/lib/chzzk';
 import { formatCount } from '@/lib/utils';
 
 /**
- * 서버 컴포넌트 - 1분 캐시로 스트리머 라이브 상태 표시
+ * 서버 컴포넌트 - 30초 캐시로 스트리머 라이브 상태 표시 (LiveRefresher가 주기적으로 재렌더)
  * 환경변수 STREAMER_CHANNEL_ID 필요
  */
 export async function LiveStatusBanner() {

@@ -1,4 +1,5 @@
 import { LiveStatusBanner } from '@/components/layout/live-status-banner';
+import { LiveRefresher } from '@/components/layout/live-refresher';
 import { SiteHeader } from '@/components/layout/site-header';
 import { BottomNav } from '@/components/layout/bottom-nav';
 import { StoryBar } from '@/components/story/story-bar';
@@ -26,6 +27,7 @@ export default async function MainLayout({
 
   return (
     <div className="min-h-screen bg-background dark text-foreground overflow-x-hidden">
+      <LiveRefresher />
       <LiveStatusBanner />
       <SiteHeader />
       <StoryBar />
