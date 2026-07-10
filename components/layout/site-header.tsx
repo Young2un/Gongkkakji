@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { StoryUploader } from '@/components/story/story-uploader';
 import { LogoutButton } from '@/components/layout/logout-button';
 import { LogIn, User, CircleDot } from 'lucide-react';
+import { BoardMenu } from '@/components/layout/board-menu';
 
 export async function SiteHeader() {
   const supabase = createClient();
@@ -41,23 +42,12 @@ export async function SiteHeader() {
           >
             공은talk
           </Link>
+          <BoardMenu />
           <Link
-            href="/c/notice"
+            href="/wiki"
             className="rounded-md px-3 py-2 text-sm text-foreground/70 transition-all hover:bg-white/5 hover:text-white font-medium"
           >
-            공지
-          </Link>
-          <Link
-            href="/c/free"
-            className="rounded-md px-3 py-2 text-sm text-foreground/70 transition-all hover:bg-white/5 hover:text-white font-medium"
-          >
-            자유
-          </Link>
-          <Link
-            href="/c/anon"
-            className="rounded-md px-3 py-2 text-sm text-foreground/70 transition-all hover:bg-white/5 hover:text-white font-medium"
-          >
-            익명
+            위키
           </Link>
           <Link
             href="/calendar"

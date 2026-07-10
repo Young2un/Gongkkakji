@@ -7,6 +7,7 @@ import {
   Calendar,
   MessageCircle,
   Newspaper,
+  BookOpen,
   User,
   CircleDot,
 } from 'lucide-react';
@@ -24,6 +25,7 @@ const BASE_ITEMS: NavItem[] = [
   { href: '/calendar', label: '일정', icon: Calendar, match: (p) => p.startsWith('/calendar') },
   { href: '/bubble', label: '공은talk', icon: MessageCircle, match: (p) => p.startsWith('/bubble') },
   { href: '/c/free', label: '게시판', icon: Newspaper, match: (p) => p.startsWith('/c/') },
+  { href: '/wiki', label: '위키', icon: BookOpen, match: (p) => p.startsWith('/wiki') },
   { href: '/profile', label: '프로필', icon: User, match: (p) => p.startsWith('/profile') || p.startsWith('/u/') },
 ];
 
